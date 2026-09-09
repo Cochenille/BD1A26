@@ -1,7 +1,7 @@
 # CLAUDE.md — Site de cours 420-07B-FX (Introduction aux bases de données)
 
 Site VitePress du cours **420-07B-FX — Introduction aux bases de données** (Cégep Garneau,
-techniques de l'informatique). Publié sur GitHub Pages sous le chemin `/cours/`.
+techniques de l'informatique). Publié sur GitHub Pages sous le chemin `/BD1A26/`.
 Contenu **100 % en français**, SGBD enseigné : **PostgreSQL**.
 
 ---
@@ -126,21 +126,22 @@ Le prof publie le contenu **au fur et à mesure de la session** :
    → Un fichier `.md` qui existe mais n'apparaît pas dans la sidebar est normal : il est en attente.
 3. Les commits suivent ce rythme (« Semaine 12 », « Semaine 13 », « TP3 fin énoncé »…).
 
-**État actuel du dépôt (non commité)** : remise à zéro pour la session **Automne 2026**.
-`docs/index.md` a été vidé de ses sections hebdomadaires (hero seul), le calendrier a été refait
-pour un seul groupe (gr2/gr3 supprimés), et les modules 3 à 5, les TP et les grilles sont
-recommentés dans la sidebar.
+**État de la session Automne 2026** (commit `init A26`) : `docs/index.md` a été vidé de ses
+sections hebdomadaires (hero seul), le calendrier refait pour un seul groupe (gr2/gr3 supprimés),
+et les modules 3 à 5, les TP et les grilles sont recommentés dans la sidebar — à décommenter au fil
+de la session.
 
-Le groupe 1 a lieu le **jeudi** à l'automne 2026 : semaine 1 le 27 août, semaine de lecture le
-15 octobre (après la semaine 7), semaine 16 le 17 décembre. Reste à valider : la ligne
-« Énoncé TP2 » à la semaine 5 alors que c'est TP1 qui précède l'examen 1.
+Le groupe 1 a lieu le **jeudi** : semaine 1 le 27 août, semaine de lecture le 15 octobre
+(après la semaine 7), semaine 16 le 17 décembre. Reste à valider : la ligne « Énoncé TP2 » à la
+semaine 5 alors que c'est TP1 qui précède l'examen 1.
 
 Détails à savoir :
-- `docs/.vitepress/.temp/` a déjà été commité par erreur ; ces fichiers sont en cours de suppression.
-- Un dossier `.vitepress/cache/` traîne **à la racine** (non suivi) : artefact d'un `vitepress dev`
-  lancé depuis le mauvais répertoire, sans effet sur le build.
 - Le lien « Documentation MariaDB » dans `nav` (`config.mts`) est un reste d'une version antérieure
   du cours : tout le contenu est passé à PostgreSQL.
+- Le dépôt est un **fork** de `07B-BD/cours`. GitHub désactive Actions par défaut sur les forks :
+  il faut l'activer une fois dans l'onglet *Actions* pour que `deploy.yml` se déclenche.
+- La branche `gh-pages` est créée par la première exécution réussie du workflow ; la source Pages
+  doit ensuite pointer dessus (*Settings → Pages*).
 
 ---
 
@@ -151,7 +152,7 @@ Détails à savoir :
 - Les liens internes utilisent des chemins relatifs (`./../../labs/lab03-ddl`) et `cleanUrls: true`
   (pas d'extension `.md` dans les liens de config).
 - Les assets de `docs/public/` se référencent par `/databases/...`, `/logos/...` — mais le site a
-  une `base: "/cours/"`, donc dans le contenu on voit plutôt des chemins relatifs
+  une `base: "/BD1A26/"`, donc dans le contenu on voit plutôt des chemins relatifs
   (`./../../databases/chinook.sql`) ou `withBase()` côté Vue.
 - Les images des labs vivent dans `docs/img/labNN/`, celles des modules dans
   `docs/modules/<module>/images/`.

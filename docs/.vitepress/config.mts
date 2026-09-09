@@ -3,7 +3,7 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid(defineConfig({
-	base: "/cours/",
+	base: "/BD1A26/",
 	lang: "fr-CA",
 	cleanUrls: true,
 	title: "420-07B-FX",
