@@ -42,6 +42,17 @@ drop table inscription;
 La table est supprimée définitivement, ainsi que toutes les données qu’elle contient.
 </div>
 
+<div class="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-4 mt-4">
+<strong>Astuce — <code>if exists</code></strong><br>
+
+```sql
+drop table if exists inscription;
+```
+
+Avec <code>if exists</code>, MariaDB ne produit pas d’erreur si la table n’existe pas déjà.
+C’est très pratique en début de script : on peut le réexécuter autant de fois qu’on veut.
+</div>
+
 ---
 
 ## Ordre de suppression des tables
@@ -49,7 +60,7 @@ La table est supprimée définitivement, ainsi que toutes les données qu’elle
 Lorsqu’il y a des relations entre tables :
 
 - une table contenant une **clé étrangère** dépend d’une autre table
-- PostgreSQL empêche la suppression d’une table encore référencée
+- MariaDB empêche la suppression d’une table encore référencée
 
 <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
 <strong>Règle importante</strong><br>
@@ -113,24 +124,55 @@ Pour le moment (et le premier TP), nous voulons un script de création complet e
 - Application de la correction dans la structure (ex.: un nouveau champ prénom dans participant)
 - Réexécution du script complet.
 
-## Astuce — Terminer les sessions actives avec le Session Manager (DBeaver)
+## Astuce — Supprimer des tables liées par des clés étrangères
 
 <img src="./images/erreur.png" alt="Erreur" class="img-bordered mb-5" />
 
-Lorsque PostgreSQL refuse de supprimer une base de données parce qu’elle est encore utilisée, il est possible de fermer les connexions actives directement dans DBeaver.
+Si vous supprimez les tables dans le mauvais ordre, MariaDB refuse l’opération :
 
-### Étapes
-- Se connecter à une autre base (ex. <code>postgres</code>).
-- Dans l’arborescence, faire un clic droit sur la connexion PostgreSQL.
-- Choisir <strong>Outils → Session Manager</strong>.
-- Repérer les sessions associées à la base <code>demo_evenements</code>.
-- Sélectionner les sessions actives.
-- Cliquer sur <strong>Terminate</strong>.
+```text
+Cannot delete or update a parent row: a foreign key constraint fails
+```
 
-<img src="./images/session-manager.png" alt="Session manager" class="img-bordered mb-5" />
+La bonne façon de régler cela est de **respecter l’ordre de suppression** vu plus haut :
+les tables enfants (celles qui contiennent des clés étrangères) en premier.
 
-<img src="./images/terminate.png" alt="Terminate session" class="img-bordered mb-5" />
+### En dernier recours
+
+Quand on veut vider une base complète et qu’on ne sait plus quel est le bon ordre, il est
+possible de désactiver temporairement la vérification des clés étrangères :
+
+```sql
+set foreign_key_checks = 0;
+
+drop table if exists evenement;
+drop table if exists participant;
+drop table if exists inscription;
+
+set foreign_key_checks = 1;
+```
+
+<div class="bg-red-50 border border-red-300 text-red-900 rounded-lg p-4 mb-5">
+<strong>À utiliser avec prudence</strong><br>
+Tant que <code>foreign_key_checks</code> vaut <code>0</code>, MariaDB accepte de créer des
+incohérences dans vos données. <strong>Toujours le remettre à <code>1</code></strong> à la
+fin du script.<br>
+Pour vos travaux, la bonne réponse reste de supprimer les tables dans le bon ordre.
+</div>
+
+---
+
+## Supprimer la base de données dans laquelle on travaille
+
+Contrairement à d’autres SGBD, MariaDB accepte de supprimer la base de données active,
+même si vous y êtes connecté avec un `use`.
+
+```sql
+use demo_evenements;
+drop database demo_evenements;
+```
 
 <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4 mb-5">
-PostgreSQL exige qu’aucune session ne soit connectée à une base avant de permettre sa suppression.
+Après cette commande, vous n’êtes plus dans aucune base : la prochaine instruction donnera
+<code>No database selected</code>. Il faut refaire un <code>use</code> vers une autre base.
 </div>

@@ -124,10 +124,14 @@ Une base de données relationnelle organise les données sous forme de **tables 
 >Une inscription relie un étudiant à un cours à l’aide d’une clé étrangère.
 
 #### Exemples de SGBD relationnels
+- MariaDB  
 - MySQL  
 - PostgreSQL  
 - SQL Server  
 - SQLite  
+
+> Dans ce cours, nous utiliserons **MariaDB**, un SGBD libre et gratuit,
+> issu du même projet d'origine que MySQL. Les deux partagent presque tout leur SQL.
 
 #### Cas d’usage typiques
 - Systèmes scolaires

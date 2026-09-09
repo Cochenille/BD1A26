@@ -60,11 +60,11 @@ Une colonne est définie par :
 
 ---
 
-## Types de données courants (PostgreSQL)
+## Types de données courants (MariaDB)
 
 ### Types numériques
-- `INTEGER` (ex. : âge, quantité, nombre de places)
-- `SERIAL` *(aperçu, utilisé plus tard pour les clés primaires)* (ex. : identifiant automatique)
+- `INT` (ex. : âge, quantité, nombre de places)
+- `INT AUTO_INCREMENT` *(aperçu, utilisé plus tard pour les clés primaires)* (ex. : identifiant automatique)
 
 ### Types textuels
 - `VARCHAR(n)` (ex. : `VARCHAR(100)` pour un nom ou un courriel)
@@ -72,13 +72,30 @@ Une colonne est définie par :
 
 ### Dates et temps
 - `DATE` (ex. : date de naissance, date d’événement)
-- `TIMESTAMP` (ex. : date et heure d’inscription)
+- `DATETIME` (ex. : date et heure d’inscription)
 
 ### Autres types utiles
 - `BOOLEAN` (ex. : actif / inactif)
-- `NUMERIC(p, s)` (ex. : `NUMERIC(8,2)` pour un montant en dollars)
+- `DECIMAL(p, s)` (ex. : `DECIMAL(8,2)` pour un montant en dollars)
 
 **Choisir un type approprié est essentiel** pour la cohérence et la qualité des données.
+
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
+<strong>Bon à savoir</strong><br>
+
+- <code>INTEGER</code> et <code>NUMERIC</code> fonctionnent aussi : ce sont des synonymes
+  de <code>INT</code> et <code>DECIMAL</code> dans MariaDB.
+- <code>BOOLEAN</code> est en réalité un synonyme de <code>TINYINT(1)</code> : MariaDB y
+  stocke <code>1</code> pour vrai et <code>0</code> pour faux. On peut écrire
+  <code>true</code> et <code>false</code> dans les requêtes, mais l’affichage montrera
+  <code>1</code> et <code>0</code>.
+- Préférez <code>DATETIME</code> à <code>TIMESTAMP</code> : <code>TIMESTAMP</code> existe
+  dans MariaDB, mais il convertit les valeurs selon le fuseau horaire et n’accepte pas
+  les dates avant 1970.
+- <strong>Ne jamais utiliser <code>FLOAT</code> ou <code>DOUBLE</code> pour de l’argent</strong> :
+  ces types arrondissent. C’est <code>DECIMAL</code> qu’il faut.
+
+</div>
 
 ---
 
@@ -95,12 +112,12 @@ create table nom_table (
 
 ### Option GUI
 
-<details id="ajouter-au-path" class="border border-gray-300 rounded-md p-4 my-4 bg-yellow-50 text-gray-800">
+<details id="creer-table-gui" class="border border-gray-300 rounded-md p-4 my-4 bg-yellow-50 text-gray-800">
   <summary class="cursor-pointer font-semibold">
     À titre indicatif seulement (ne pas utiliser cette approche pour les travaux à remettre)
   </summary>
 
-- Pour créer une table avec le GUI, vous devez sélectionner le schéma dans lequel vous voulez la créer. Dans ce cours, sélectionnez toujours le schéma `public` de votre base de données.
+- Pour créer une table avec le GUI, vous devez d’abord sélectionner **la base de données** dans laquelle vous voulez la créer.
 
 <img src="./images/create-table-gui.png" alt="Création table" class="img-bordered w-s" />
 

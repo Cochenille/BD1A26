@@ -21,7 +21,7 @@ L’objectif est de maîtriser la syntaxe et d’être capable de la reproduire 
 <strong>Consignes importantes</strong><br>
 <ul class="list-disc pl-5">
   <li>Créez d'abord la base de données lab03_concessionnaire</li>
-  <li>Ouvrez ensuite un nouveau script sur cette base de données</li>
+  <li>Commencez votre script par <code>use lab03_concessionnaire;</code></li>
   <li>Exécutez une étape à la fois</li>
 </ul>
 </div>
@@ -44,14 +44,12 @@ Un schéma relationnel est fourni (image).
 
 ## Travail à réaliser
 
-À partir du schéma fourni, écrire les instructions SQL nécessaires pour :
+À partir du schéma fourni, écrire les instructions SQL nécessaires pour créer les tables suivantes :
 
-1. Créer un **type ENUM PostgreSQL** représentant le **type de carburant** d’une voiture.
-2. Créer les tables suivantes :
-   - `client`
-   - `vendeur`
-   - `voiture`
-   - `achat`
+- `client`
+- `vendeur`
+- `voiture`
+- `achat`
 
 Le script doit pouvoir être exécuté **sur une base de données vide déjà créée**.
 
@@ -59,13 +57,7 @@ Le script doit pouvoir être exécuté **sur une base de données vide déjà cr
 
 ## Détails et contraintes à respecter
 
-### 1) Type ENUM — carburant
-- Le type ENUM doit contenir plusieurs valeurs possibles (ex. essence, diesel, electrique).
-- Le type ENUM doit être créé **avant** la table `voiture`.
-
----
-
-### 2) Table `client`
+### 1) Table `client`
 - Clé primaire auto-générée
 - Colonnes :
   - nom (obligatoire)
@@ -74,7 +66,7 @@ Le script doit pouvoir être exécuté **sur une base de données vide déjà cr
 
 ---
 
-### 3) Table `vendeur`
+### 2) Table `vendeur`
 - Clé primaire auto-générée
 - Colonnes :
   - nom (obligatoire)
@@ -83,22 +75,46 @@ Le script doit pouvoir être exécuté **sur une base de données vide déjà cr
   - un vendeur peut avoir **0 ou 1 superviseur**
   - le superviseur est un autre vendeur
 
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
+<strong>Particularité MariaDB — à lire avant d'écrire cette table</strong><br>
+
+MariaDB <strong>refuse</strong> une clé étrangère qui pointe vers la table en cours de
+création. Il faut donc procéder en deux temps : créer la table avec la colonne
+<code>id_superviseur</code>, puis ajouter la clé étrangère juste après.
+
+```sql
+alter table vendeur
+    add foreign key (id_superviseur) references vendeur(id_vendeur);
+```
+
+L'instruction <code>alter table</code> sera vue en détail au module 5. Pour ce laboratoire,
+recopiez simplement cette ligne après votre <code>create table vendeur</code>.
+</div>
+
 ---
 
-### 4) Table `voiture`
+### 3) Table `voiture`
 - Clé primaire auto-générée
 - Colonnes obligatoires :
   - marque
   - modèle
   - année
   - prix affiché
-  - type de carburant (ENUM)
+  - type de carburant
+- Le type de carburant doit être un **ENUM** limité à quelques valeurs
+  (ex. essence, diesel, electrique)
 - Le prix affiché doit être **strictement positif**
 - Deux voitures identiques (même marque, modèle et année) ne doivent pas être dupliquées
 
+<div class="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-4">
+<strong>Rappel</strong><br>
+Dans MariaDB, un <code>ENUM</code> se déclare <strong>directement dans la colonne</strong>.
+Il n'y a aucun type à créer avant la table.
+</div>
+
 ---
 
-### 5) Table `achat`
+### 4) Table `achat`
 - Clé primaire auto-générée
 - Colonnes obligatoires :
   - date d’achat
@@ -125,10 +141,12 @@ Le script doit pouvoir être exécuté **sur une base de données vide déjà cr
 
 ## Questions (réflexion)
 
-- Pourquoi le type ENUM doit-il être créé avant la table `voiture` ?
 - Pourquoi la relation superviseur → vendeur est-elle optionnelle ?
+- Pourquoi faut-il ajouter la clé étrangère de `vendeur` **après** avoir créé la table ?
 - Pourquoi la table `achat` contient-elle plusieurs clés étrangères ?
 - Quel problème est évité par la contrainte d’unicité sur la table `voiture` ?
+- Quelle serait la façon d’obtenir le même résultat que l’`ENUM` du carburant en utilisant
+  une contrainte `CHECK` ? Quel est l’avantage de cette deuxième approche ?
 
 <details class="mt-6">
 <summary class="cursor-pointer font-semibold text-red-700">
@@ -145,14 +163,10 @@ pas de recopier une solution.
 
 ---
 
-### Type ENUM — carburant
+### Sélection de la base de données
 
 ```sql
-create type type_carburant as enum (
-  'essence',
-  'diesel',
-  'electrique'
-);
+use lab03_concessionnaire;
 ```
 
 ---
@@ -161,7 +175,7 @@ create type type_carburant as enum (
 
 ```sql
 create table client (
-  id_client serial primary key,
+  id_client int primary key auto_increment,
   nom varchar(50) not null,
   prenom varchar(50) not null,
   telephone varchar(20) not null
@@ -174,13 +188,22 @@ create table client (
 
 ```sql
 create table vendeur (
-  id_vendeur serial primary key,
+  id_vendeur int primary key auto_increment,
   nom varchar(50) not null,
   prenom varchar(50) not null,
-  id_superviseur integer,
-  foreign key (id_superviseur) references vendeur(id_vendeur)
+  id_superviseur int
 );
+
+alter table vendeur
+  add foreign key (id_superviseur) references vendeur(id_vendeur);
 ```
+
+>La table se référence elle-même. Comme `id_superviseur` peut être `null`, un vendeur
+sans superviseur reste permis.
+
+>La clé étrangère est ajoutée **après** la création : MariaDB refuse une clé étrangère qui
+pointe vers une table qui n'existe pas encore, et pendant le `create table`, `vendeur`
+n'existe pas encore.
 
 ---
 
@@ -188,12 +211,12 @@ create table vendeur (
 
 ```sql
 create table voiture (
-  id_voiture serial primary key,
+  id_voiture int primary key auto_increment,
   marque varchar(40) not null,
   modele varchar(40) not null,
-  annee integer not null,
-  prix_affiche numeric(10,2) not null check (prix_affiche > 0),
-  carburant type_carburant not null,
+  annee int not null,
+  prix_affiche decimal(10,2) not null check (prix_affiche > 0),
+  carburant enum('essence', 'diesel', 'electrique') not null,
   unique (marque, modele, annee)
 );
 ```
@@ -203,12 +226,12 @@ create table voiture (
 
 ```sql
 create table achat (
-  id_achat serial primary key,
+  id_achat int primary key auto_increment,
   date_achat date not null,
-  prix_vente numeric(10,2) not null check (prix_vente > 0),
-  id_client integer not null,
-  id_vendeur integer not null,
-  id_voiture integer not null,
+  prix_vente decimal(10,2) not null check (prix_vente > 0),
+  id_client int not null,
+  id_vendeur int not null,
+  id_voiture int not null,
   foreign key (id_client) references client(id_client),
   foreign key (id_vendeur) references vendeur(id_vendeur),
   foreign key (id_voiture) references voiture(id_voiture)
@@ -219,11 +242,11 @@ create table achat (
 
 ### Ordre de création recommandé
 
-1. type_carburant  
-2. client  
-3. vendeur  
-4. voiture  
-5. achat  
+1. client  
+2. vendeur  
+3. voiture  
+4. achat  
+
+>Les tables sans clé étrangère d'abord, `achat` en dernier puisqu'elle référence les trois autres.
 
 </details>
-

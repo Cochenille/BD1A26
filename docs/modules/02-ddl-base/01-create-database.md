@@ -6,7 +6,7 @@ aside: false
 # 01 — Créer une base de données
 
 ## Objectif
-Comprendre qu’une **base de données PostgreSQL** est un **contenant logique de haut niveau**, utilisé pour regrouper les tables d’un même travail ou projet, avant même de contenir des données.
+Comprendre qu’une **base de données MariaDB** est un **contenant logique de haut niveau**, utilisé pour regrouper les tables d’un même travail ou projet, avant même de contenir des données.
 
 ---
 
@@ -16,16 +16,14 @@ Le **DDL** est la partie du langage SQL qui permet de **définir et modifier la 
 
 ---
 
-## Organisation logique dans PostgreSQL
+## Organisation logique dans MariaDB
 
-Dans PostgreSQL, les éléments sont organisés de la façon suivante :
-- Serveur PostgreSQL
+Dans MariaDB, les éléments sont organisés de la façon suivante :
+- Serveur MariaDB
     - Base de données
-        - Schémas
-            - Tables
+        - Tables
 
-> Une table appartient à un **schéma**,  
-> et un schéma appartient à une **base de données**.
+> Une table appartient directement à une **base de données**.
 
 ---
 
@@ -34,35 +32,56 @@ Dans PostgreSQL, les éléments sont organisés de la façon suivante :
 Une base de données permet de :
 
 - isoler complètement les données d’un travail ou d’un projet
-- regrouper toutes les tables liées à un même contexte dans des schémas
+- regrouper toutes les tables liées à un même contexte
 - appliquer des paramètres globaux (droits, encodage)
 
 ---
 
-## Le concept de schéma dans PostgreSQL
+## Base de données ou schéma ?
 
-Un **schéma** est un regroupement logique de tables à l’intérieur d’une base de données.
+Dans certains SGBD (PostgreSQL, Oracle), un niveau supplémentaire appelé **schéma** s’insère
+entre la base de données et les tables.
 
-- À la création d'une base de données, PostgreSQL crée automatiquement le schéma `public`
-- Toutes les tables sont créées dans ce schéma par défaut
-- Aucun schéma supplémentaire ne sera créé dans ce cours
+**Ce niveau n’existe pas dans MariaDB.** Pour MariaDB, les mots *base de données* et
+*schéma* désignent exactement la même chose.
 
->Toutes les tables seront créées dans le schéma par défaut `public`
+```sql
+create database tp_evenements;
+create schema tp_evenements;   -- fait rigoureusement la même chose
+```
+
+> Ne soyez donc pas surpris de voir le mot **Schema** apparaître dans DBeaver ou dans les
+> messages d’erreur : il s’agit de votre base de données.
 
 ---
 
 ## Encodage de la base de données
 
-Lors de la création d’une base de données, PostgreSQL lui associe un **encodage de caractères**.
+Lors de la création d’une base de données, MariaDB lui associe un **jeu de caractères**
+(*character set*) et une **règle de comparaison** (*collation*).
 
-- L’encodage détermine comment les caractères sont stockés
+- Le jeu de caractères détermine comment les caractères sont stockés
 - Il influence la gestion des accents et caractères spéciaux
-- L’encodage **UTF-8** est recommandé et utilisé par défaut dans la majorité des installations
+- Le jeu **`utf8mb4`** est celui à utiliser : c’est le seul qui stocke correctement
+  **tous** les caractères Unicode (accents, mais aussi emojis)
+
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
+<strong>Piège fréquent</strong><br>
+Dans MariaDB, le jeu de caractères nommé <code>utf8</code> est un « faux » UTF-8 limité à
+3 octets par caractère. Utilisez toujours <code>utf8mb4</code>.
+</div>
 
 **Dans ce cours**  
-> Nous utilisons l’encodage par défaut (UTF-8).  
+> Nous utilisons le jeu de caractères par défaut du serveur, configuré en `utf8mb4` lors de
+> l’installation (voir le Lab 01).  
 > Aucune configuration particulière n’est requise de votre part.
 
+Il est toutefois possible de le préciser explicitement :
+
+```sql
+create database tp_evenements
+    character set utf8mb4;
+```
 
 ## Convention de nommage
 
@@ -94,21 +113,40 @@ create database tp_evenements;
 
 <img src="./images/creation-bd-gui.png" alt="Création BD GUI" class="img-bordered w-s" />
 
-## Se connecter à une base de données
+## Choisir la base de données de travail
 
-La base de données est sélectionnée :
-- au moment de la connexion
-- ou en ouvrant une nouvelle connexion dans l’outil de gestion (clic droit + nouveau script)
+Créer une base de données ne veut pas dire qu’on y travaille. Il faut ensuite indiquer à
+MariaDB **dans quelle base** les prochaines instructions doivent s’exécuter.
 
-Toutes les instructions SQL s’exécutent toujours dans **une seule base de données à la fois**.
+### Instruction `USE`
 
->Contrairement à d'autres SGBD, PostgreSQL n'utilise pas l'instruction USE
+```sql
+use tp_evenements;
+```
 
-#### Option GUI
+À partir de ce moment, toutes les instructions (`create table`, `insert`, `select`…)
+s’appliquent à `tp_evenements`, et ce jusqu’à ce qu’on écrive un autre `use`.
+
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
+<strong>Erreur classique</strong><br>
+<code>No database selected</code> : vous avez oublié le <code>use</code> au début de votre script.
+</div>
+
+> Bonne habitude : commencer **tout script SQL** par son `use`. Ainsi, le script reste
+> correct même si quelqu’un d’autre l’exécute.
+
+### Option GUI
+
+La base de données active peut aussi être choisie dans la barre d’outils de DBeaver.
 
 <img src="./images/connexion-gui.png" alt="Connexion BD GUI" class="img-bordered w-s" />
 
 >Vous pouvez aussi définir la base de données dans laquelle vous travaillez comme `objet par défaut`
+
+<div class="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-4">
+Le <code>use</code> écrit dans le script et la sélection dans DBeaver font la même chose.
+Pour vos travaux, écrivez toujours le <code>use</code> : votre script doit être complet à lui seul.
+</div>
 
 ---
 
@@ -116,8 +154,12 @@ Toutes les instructions SQL s’exécutent toujours dans **une seule base de don
 
 ### Lister les bases disponibles
 ```sql
-select datname
-from pg_database;
+show databases;
+```
+
+### Savoir dans quelle base on se trouve
+```sql
+select database();
 ```
 
 Vous pouvez également faire clic-droit et rafraîchir (F5)

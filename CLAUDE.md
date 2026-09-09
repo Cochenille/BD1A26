@@ -132,8 +132,7 @@ et les modules 3 à 5, les TP et les grilles sont recommentés dans la sidebar �
 de la session.
 
 Le groupe 1 a lieu le **jeudi** : semaine 1 le 27 août, semaine de lecture le 15 octobre
-(après la semaine 7), semaine 16 le 17 décembre. Reste à valider : la ligne « Énoncé TP2 » à la
-semaine 5 alors que c'est TP1 qui précède l'examen 1.
+(après la semaine 7), semaine 16 le 17 décembre.
 
 Détails à savoir :
 - Le lien « Documentation MariaDB » dans `nav` (`config.mts`) est un reste d'une version antérieure

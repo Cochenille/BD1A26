@@ -6,13 +6,20 @@ aside: false
 # 05 — Démonstration guidée — Créer une BD, des tables, des contraintes, des clés (PK/FK)
 
 ## Objectif de la démo
-- Créer une base de données PostgreSQL.
+- Créer une base de données MariaDB.
 - Créer des tables liées à un contexte simple (événements).
 - Définir des contraintes simples (NOT NULL, UNIQUE, DEFAULT, CHECK).
 - Définir des clés primaires (PRIMARY KEY).
 - Définir des clés étrangères (FOREIGN KEY).
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/1FbFcJfxpNs?si=8Agvt-k2uKXZYBAo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<div class="bg-red-50 border border-red-300 text-red-900 rounded-lg p-4 mt-3">
+<strong>⚠️ Vidéo à remplacer</strong><br>
+Cette capture vidéo a été enregistrée avec PostgreSQL. La démarche reste la même, mais la
+syntaxe montrée à l'écran (<code>serial</code>, absence de <code>use</code>) ne correspond
+plus au cours. Fiez-vous au texte de la page.
+</div>
 
 <div class="bg-red-50 border border-red-300 text-red-900 rounded-lg p-4 mt-5">
 <strong>Important — apprentissage</strong><br>
@@ -43,9 +50,16 @@ create table nom_table (
 create database demo_evenements;
 ```
 
+Il faut ensuite **se placer dans cette base** avant de créer quoi que ce soit :
+
+```sql
+use demo_evenements;
+```
+
 <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
 <strong>Action</strong><br>
-Se reconnecter ensuite à la base <code>demo_evenements</code> dans l’outil en ouvrant un nouveau script.
+Sans ce <code>use</code>, MariaDB répondra <code>No database selected</code> à la première
+instruction <code>create table</code>.
 </div>
 
 ---
@@ -54,7 +68,7 @@ Se reconnecter ensuite à la base <code>demo_evenements</code> dans l’outil en
 
 ```sql
 create table evenement (
-    id serial primary key,
+    id int primary key auto_increment,
     nom varchar(100) not null,
     date_evenement date not null,
     lieu varchar(100) not null,
@@ -74,7 +88,7 @@ Constater que la clé primaire identifie chaque événement et que les contraint
 
 ```sql
 create table participant (
-    id serial primary key,
+    id int primary key auto_increment,
     nom varchar(100) not null,
     courriel varchar(150) not null unique,
     actif boolean not null default true
@@ -96,10 +110,10 @@ Utiliser <code>UNIQUE</code> sur <code>courriel</code> pour empêcher deux parti
 
 ```sql
 create table inscription (
-    id serial primary key,
+    id int primary key auto_increment,
     evenement_id integer not null,
     participant_id integer not null,
-    date_inscription date not null default current_date,
+    date_inscription date not null default (current_date),
 
     foreign key (evenement_id) references evenement(id),
     foreign key (participant_id) references participant(id),
@@ -110,7 +124,9 @@ create table inscription (
 
 <div class="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-4 mb-5">
 <strong>Astuce</strong><br>
-<code>CURRENT_DATE</code> permet d'enregistrer la date d'aujourd'hui par défaut.
+<code>CURRENT_DATE</code> permet d'enregistrer la date d'aujourd'hui par défaut.<br>
+Notez les <strong>parenthèses</strong> : MariaDB les exige autour d'une expression utilisée
+comme valeur par défaut.
 </div>
 
 <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
@@ -143,8 +159,10 @@ Script complet pour validation
 ## Script complet (exécuter dans l’ordre)
 
 ```sql
+use demo_evenements;
+
 create table evenement (
-    id serial primary key,
+    id int primary key auto_increment,
     nom varchar(100) not null,
     date_evenement date not null,
     lieu varchar(100) not null,
@@ -153,17 +171,17 @@ create table evenement (
 );
 
 create table participant (
-    id serial primary key,
+    id int primary key auto_increment,
     nom varchar(100) not null,
     courriel varchar(150) not null unique,
     actif boolean not null default true
 );
 
 create table inscription (
-    id serial primary key,
+    id int primary key auto_increment,
     evenement_id integer not null,
     participant_id integer not null,
-    date_inscription date not null default current_date,
+    date_inscription date not null default (current_date),
     foreign key (evenement_id) references evenement(id),
     foreign key (participant_id) references participant(id),
     unique (evenement_id, participant_id)

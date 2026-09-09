@@ -35,6 +35,18 @@ Dans cette section, nous verrons :
 
 <div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">Les clés primaires et étrangères seront vues dans la section suivante..</div>
 
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
+<strong>Pourquoi <code>id int primary key auto_increment</code> dans tous les exemples ?</strong><br>
+
+<code>AUTO_INCREMENT</code> demande à MariaDB de générer automatiquement le prochain
+identifiant. MariaDB impose une règle : <strong>une colonne <code>auto_increment</code> doit
+obligatoirement être une clé</strong>. On la déclare donc tout de suite comme clé primaire,
+même si les clés primaires sont expliquées en détail à la section suivante.
+
+Sans le <code>primary key</code>, MariaDB refuse la table avec le message
+<em>« there can be only one auto column and it must be defined as a key »</em>.
+</div>
+
 ---
 
 ## Contrainte NOT NULL
@@ -48,7 +60,7 @@ Dans cette section, nous verrons :
 
 ```sql
     create table evenement (
-        id serial,
+        id int primary key auto_increment,
         nom varchar(100) not null,
         date_evenement date not null
     );
@@ -67,7 +79,7 @@ Empêche la présence de **doublons** dans une colonne.
 
 ```sql
     create table participant (
-        id serial,
+        id int primary key auto_increment,
         courriel varchar(150) unique,
         nom varchar(100)
     );
@@ -86,7 +98,7 @@ Attribue une **valeur par défaut** lorsqu’aucune valeur n’est fournie.
 
 ```sql
     create table evenement (
-        id serial,
+        id int primary key auto_increment,
         nom varchar(100) not null,
         actif boolean default true
     );
@@ -105,7 +117,7 @@ Impose une **condition logique** sur les valeurs possibles d’une colonne.
 
 ```sql
     create table inscription (
-        id serial,
+        id int primary key auto_increment,
         nombre_places integer check (nombre_places > 0)
     );
 ```
@@ -122,7 +134,7 @@ Une même colonne peut avoir **plusieurs contraintes**.
 
 ```sql
 create table evenement (
-    id serial,
+    id int primary key auto_increment,
     nom varchar(100) not null,
     capacite integer not null check (capacite >= 0),
     actif boolean default true
@@ -156,7 +168,8 @@ create table evenement (
 ### Rôle
 Limiter les **valeurs possibles** d’une colonne à un **ensemble prédéfini et fermé**.
 
-Une colonne de type `ENUM` n’accepte **que les valeurs explicitement définies** lors de la création du type.
+Une colonne de type `ENUM` n’accepte **que les valeurs explicitement définies** dans la
+déclaration de la colonne.
 
 >Un `ENUM` est un **type de données et non une contrainte de table**. Il permet toutefois d'agir d'une façon similaire à un `CHECK`.
 
@@ -164,31 +177,40 @@ Une colonne de type `ENUM` n’accepte **que les valeurs explicitement définies
 
 ### Exemple
 
-1) On doit en premier lieu créer un nouveau `TYPE AS ENUM`.
-2) On peut ensuite utiliser le nouveau type à la création de table.
+Dans MariaDB, l’ENUM se déclare **directement dans la colonne**, avec la liste des valeurs
+permises entre parenthèses.
 
 ```sql
-create type statut_evenement as enum ('planifie', 'annule', 'termine');
-
 create table evenement (
-    id serial,
+    id int primary key auto_increment,
     nom varchar(100) not null,
-    statut statut_evenement not null
+    statut enum('planifie', 'annule', 'termine') not null
 );
-
 ```
 
->Ici, la colonne `statut` ne peut contenir que l’une des valeurs définies dans l’ENUM.
+>Ici, la colonne `statut` ne peut contenir que l’une des trois valeurs listées.
+
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
+<strong>À noter</strong><br>
+
+- Il n’y a <strong>rien à créer au préalable</strong> : la liste des valeurs fait partie de
+  la définition de la colonne.
+- Si deux tables ont besoin de la même liste, il faut la répéter dans chacune.
+- <code>ENUM</code> est une particularité de MariaDB et MySQL. Il n’existe pas dans tous les
+  SGBD; un <code>CHECK</code> donne un résultat équivalent et est plus portable :
+
+```sql
+statut varchar(20) not null check (statut in ('planifie', 'annule', 'termine'))
+```
+
+</div>
 
 ---
 
 ### Visualisation dans DBeaver
 
-Les types `ENUM` sont visibles dans :
-- le schéma de la base de données
-- la liste des **Types** ou **Domains**
-- la définition de la colonne utilisant ce type
+La liste des valeurs permises apparaît **dans la définition de la colonne**, sous la
+colonne `Type de données` de la table.
 
 <img src="./images/enum1.png" alt="Voir enums" class="img-bordered w-s mb-5" />
 
-<img src="./images/enum2.png" alt="Enum" class="img-bordered w-s" />

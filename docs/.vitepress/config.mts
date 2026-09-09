@@ -198,12 +198,12 @@ export default withMermaid(defineConfig({
 					{ text: "Lab 01 — Installations", link: "/labs/lab01-installations" },
 					{ text: "Lab 02 — Modélisation", link: "/labs/lab02-modelisation" },
 					{ text: "Lab 03 — DDL", link: "/labs/lab03-ddl" },
-					{ text: "Lab 04 — Requêtes select", link: "/labs/lab04-select" },
+					/*{ text: "Lab 04 — Requêtes select", link: "/labs/lab04-select" },
 					{ text: "Lab 05 — Modification, opérateurs et sous-requêtes", link: "/labs/lab05-avance" },
 					{ text: "Lab 06 — Jointures", link: "/labs/lab06-jointures" },
 					{ text: "Lab 07 — Agrégations", link: "/labs/lab07-agregations" },
 					{ text: "Lab 08 — DDL & maintenance", link: "/labs/lab08-ddl-maintenance" },
-					{ text: "Lab 09 — Sécurité", link: "/labs/lab09-securite" }
+					{ text: "Lab 09 — Sécurité", link: "/labs/lab09-securite" }*/
 				],
 			},
 			{
