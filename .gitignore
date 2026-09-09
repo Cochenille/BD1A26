@@ -1,6 +1,7 @@
-# Fichier cache
-docs/.vitepress/cache
-docs/.vitepress/dist
+# Fichiers générés par VitePress (à n'importe quel niveau)
+**/.vitepress/cache
+**/.vitepress/dist
+**/.vitepress/.temp
 
 # Logs
 logs

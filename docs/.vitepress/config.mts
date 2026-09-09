@@ -13,13 +13,10 @@ export default withMermaid(defineConfig({
 		logo: "./logos/logo.png",
 
 		nav: [
-			{ text: "Plan de cours", link: "/plan-cours/plan-de-cours" },
 			{ 
 				text: "Calendrier",
 				items: [
-					{ text: "Groupe 1", link: "/plan-cours/calendrier-gr1" },
-					{ text: "Groupe 2", link: "/plan-cours/calendrier-gr2" },
-					{ text: "Groupe 3", link: "/plan-cours/calendrier-gr3" },
+					{ text: "Groupe 1", link: "/plan-cours/calendrier-gr1" }
 				], 
 			},
 			{
@@ -27,32 +24,21 @@ export default withMermaid(defineConfig({
 				items: [
 					{ text: "Module 1 — Introduction", link: "/modules/01-introduction/" },
 					{ text: "Module 2 — DDL de base", link: "/modules/02-ddl-base/" },
-					{ text: "Module 3 — SQL", link: "/modules/03-sql-base/" },
-					{ text: "Module 4 — Jointures et agrégations", link: "/modules/04-jointures-agregations/" },
-					{ text: "Module 5 — DDL avancé", link: "/modules/05-ddl-avance/"}
+					//{ text: "Module 3 — SQL", link: "/modules/03-sql-base/" },
+					//{ text: "Module 4 — Jointures et agrégations", link: "/modules/04-jointures-agregations/" },
+					//{ text: "Module 5 — DDL avancé", link: "/modules/05-ddl-avance/"}
 				],
 			},
-			{
-				text: "Travaux",
-				items: [
-					{ text: "TP1 — Création de BD", link: "/travaux/tp1-creation-bd" },
-					{ text: "TP2 — SQL", link: "/travaux/tp2-sql" },
-					{ text: "TP3 — DDL avancé", link: "/travaux/tp3-ddl-avance" },
-				],
-			},
-			{ text: 'Documentation PostgreSQL', link: 'https://docs.postgresql.fr/18/'},
+			{ text: 'Documentation MariaDB', link: 'https://mariadb.com/docs'},
 		],
 		sidebar: [
 			{
 				text: "Documents généraux",
 				items: [
-					{ text: "Plan de cours", link: "/plan-cours/plan-de-cours" },
 					{
 						text: "Calendriers",
 						items: [
-							{ text: "Groupe 1", link: "/plan-cours/calendrier-gr1" },
-							{ text: "Groupe 2", link: "/plan-cours/calendrier-gr2" },
-							{ text: "Groupe 3", link: "/plan-cours/calendrier-gr3" },
+							{ text: "Groupe 1", link: "/plan-cours/calendrier-gr1" }
 						],
 					},
 				],
@@ -117,7 +103,7 @@ export default withMermaid(defineConfig({
 							},
 						],
 					},					
-					{
+					/*{
 						text: "Module 3 — SQL",
 						collapsed: true,
 						items: [
@@ -202,7 +188,7 @@ export default withMermaid(defineConfig({
 								link: "/modules/05-ddl-avance/06-revision-examen-2",
 							},
 						],
-					}
+					}*/
 				],
 			},
 			{
@@ -224,18 +210,18 @@ export default withMermaid(defineConfig({
 				text: "Travaux pratiques",
 				collapsed: true,
 				items: [
-					{ text: "TP1 — Création BD", link: "/travaux/tp1-creation-bd" },
-					{ text: "TP2 — Requêtes SQL", link: "/travaux/tp2-sql" },
-					{ text: "TP3 — DDL avancé", link: "/travaux/tp3-ddl-avance" },
+					//{ text: "TP1 — Création BD", link: "/travaux/tp1-creation-bd" },
+					//{ text: "TP2 — Requêtes SQL", link: "/travaux/tp2-sql" },
+					//{ text: "TP3 — DDL avancé", link: "/travaux/tp3-ddl-avance" },
 				],
 			},
 			{
 				text: "Grilles d’évaluation",
 				collapsed: true,
 				items: [
-					{ text: "Grille — TP1", link: "/grilles/grille-tp1" },
-					{ text: "Grille — TP2", link: "/grilles/grille-tp2" },
-					{ text: "Grille — TP3", link: "/grilles/grille-tp3" },
+					//{ text: "Grille — TP1", link: "/grilles/grille-tp1" },
+					//{ text: "Grille — TP2", link: "/grilles/grille-tp2" },
+					//{ text: "Grille — TP3", link: "/grilles/grille-tp3" },
 					//{ text: "Grille — Examen 1", link: "/grilles/grille-examen1" },
 					//{ text: "Grille — Examen 2", link: "/grilles/grille-examen2" },
 				],
@@ -244,6 +230,14 @@ export default withMermaid(defineConfig({
 
 		search: {
 			provider: "local",
+		},
+	},
+	vite: {
+		optimizeDeps: {
+			include: [
+				"fastdom",
+				"fastdom/extensions/fastdom-promised.js",
+			],
 		},
 	},
 }));
