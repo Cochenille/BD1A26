@@ -1,0 +1,1 @@
+import{_ as e,o as r,c as t}from"./chunks/framework.Crt1tuW8.js";const _=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"grilles/grille-examen1.md","filePath":"grilles/grille-examen1.md"}'),a={name:"grilles/grille-examen1.md"};function l(n,s,i,o,c,m){return r(),t("div")}const d=e(a,[["render",l]]);export{_ as __pageData,d as default};
