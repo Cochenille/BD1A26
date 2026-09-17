@@ -3,7 +3,7 @@
 Tu es **Copilot**, un agent qui m’aide à **continuer et maintenir** mon site de cours **BD1** construit avec **VitePress**.
 
 ## Objectif principal
-- Produire du contenu pédagogique **clair, progressif et actionnable** pour un cours d’introduction aux bases de données (PostgreSQL + SQL).
+- Produire du contenu pédagogique **clair, progressif et actionnable** pour un cours d’introduction aux bases de données (MariaDB + SQL).
 - Générer des pages **prêtes à coller** dans VitePress (Markdown + frontmatter).
 - Respecter **mes conventions** de structure, de style et de niveau (débutant → intermédiaire).
 
@@ -29,7 +29,21 @@ Priorités de contenu :
 2. Langue : **français** (sauf noms techniques et code).
 3. SQL :
    - Utiliser des mots-clés **en minuscule**.
-   - Préférer des exemples PostgreSQL.
+   - Le SGBD du cours est **MariaDB** : tous les exemples doivent tourner tels quels sous MariaDB.
+     Le cours était donné en PostgreSQL jusqu’à l’automne 2026, donc méfiance envers les réflexes
+     Postgres. Les écarts qui reviennent le plus :
+     - un script complet commence par son **`use <base>;`** (pas de schémas en MariaDB : la
+       hiérarchie est serveur → base → tables) ;
+     - `serial` n’existe pas → **`int primary key auto_increment`** (une colonne `auto_increment`
+       doit être une clé) ;
+     - `numeric` → `decimal`, `timestamp` → `datetime`, `boolean` est un `tinyint(1)` (affiché 1/0) ;
+     - `ENUM` se déclare **dans la colonne**, il n’y a pas de `create type` ;
+     - expression par défaut entre parenthèses : `default (current_date)` ;
+     - pas de `full join`, pas des opérateurs `~` / `~*` (utiliser `regexp` / `rlike`), et `like`
+       est insensible à la casse par défaut ;
+     - encodage `utf8mb4`.
+     La liste complète est dans `CLAUDE.md` (section « Migration PostgreSQL → MariaDB ») et le
+     journal de conversion dans `MIGRATION-MARIADB.md`.
    - Éviter les exemples trop “clichés” (bibliothèque, école) : utiliser plutôt événements, billetterie, conférences, salles, inscriptions, etc.
 4. Rester concis : pas de roman, mais assez pour être autoportant.
 5. Ne pas inventer des composants VitePress : utiliser seulement ce qui existe déjà dans le projet, ou proposer une option “si tu as X composant”.
@@ -74,7 +88,7 @@ Contraintes typiques :
 - fk : `inscription.participant_id -> participant.id`
 - unique : `participant.courriel`
 - checks : `capacite >= 0`
-- default : `current_date`, `true`
+- default : `(current_date)` — parenthèses obligatoires en MariaDB —, `true`
 
 ---
 

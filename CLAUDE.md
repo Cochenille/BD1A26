@@ -2,7 +2,8 @@
 
 Site VitePress du cours **420-07B-FX — Introduction aux bases de données** (Cégep Garneau,
 techniques de l'informatique). Publié sur GitHub Pages sous le chemin `/BD1A26/`.
-Contenu **100 % en français**, SGBD enseigné : **PostgreSQL**.
+Contenu **100 % en français**, SGBD enseigné : **MariaDB** (le cours était donné en PostgreSQL
+jusqu'à l'automne 2026 — la conversion est en cours, voir « Migration PostgreSQL → MariaDB »).
 
 ---
 
@@ -71,7 +72,54 @@ Thèmes des TP (chacun a sa grille dans `docs/grilles/`) :
 - **TP3** — « Enquête SQL : l'IA trop zélée » : DDL avancé sur une BD fournie.
 
 Base de données d'exemple pour les démos de jointures/agrégations : **Chinook**
-(`docs/public/databases/chinook.sql`, importée avec `psql -U postgres -f ...`).
+(`docs/public/databases/chinook.sql`). ⚠️ Le fichier présent est encore la version **PostgreSQL** :
+il faut le remplacer par la version MySQL/MariaDB officielle, puis revalider toutes les requêtes
+du module 4 (les noms de tables et de colonnes diffèrent légèrement).
+Import : ouvrir le `.sql` dans DBeaver et exécuter tout le script (`Alt + X`).
+
+---
+
+## Migration PostgreSQL → MariaDB (en cours)
+
+Le cours était donné en PostgreSQL jusqu'à l'automne 2026. La conversion se fait **un module à
+la fois**. `MIGRATION-MARIADB.md` (racine du dépôt) est le journal détaillé et fait foi : le lire
+avant de retoucher une page déjà convertie. `A-FAIRE.md` en est l'extrait actionnable : ce qui
+reste à faire à la main (captures, vidéos, vérifications DBeaver). Tenir les deux à jour.
+
+| Partie | État |
+|---|---|
+| Modules 1, 2, 3 et labs 01, 03, 04, 05 | ✅ texte converti — captures d'écran encore à refaire (🧑 dans le journal) |
+| Modules 4, 5 | ⏳ encore en PostgreSQL |
+| Labs 06 à 09 | ⏳ non revus — mentions explicites de PostgreSQL dans lab06 et lab09 |
+| `module_03_evenement_*.sql` | ✅ réécrits en MariaDB |
+| `chinook.sql`, `tp2_*`, `tp3_*` | ⏳ encore en syntaxe PostgreSQL |
+| TP1 | mis de côté, non converti (décision du prof, 2026-09-09) |
+
+Différences à respecter en écrivant ou en convertissant du contenu :
+
+- **Pas de schémas** : la hiérarchie est *serveur → base → tables*. `create schema` est un simple
+  synonyme de `create database`.
+- Tout script commence par son **`use <base>;`**, sinon l'erreur `No database selected`.
+- `serial` → **`int primary key auto_increment`** : une colonne `auto_increment` doit être une clé.
+- `numeric` → `decimal`, `timestamp` → `datetime`, `boolean` est un `tinyint(1)` qui s'affiche 1/0.
+- Encodage **`utf8mb4`** — le charset nommé `utf8` en MariaDB est un faux UTF-8 sur 3 octets.
+- `ENUM` se déclare **dans la colonne** : il n'y a pas de `create type`. Mentionner que
+  `check ... in (...)` est plus portable.
+- Expression par défaut entre parenthèses : `default (current_date)`.
+- Une FK doit avoir **exactement** le type de la PK référencée et la table être en **InnoDB**,
+  sinon `errno 150`. Une FK récursive se pose en deux temps (`create table` puis `alter table`).
+- `like` est **insensible à la casse** par défaut (collations `_ci`), contrairement à PostgreSQL.
+- Pas d'opérateurs `~` / `~*` → **`regexp` / `rlike`**. Pas de `full join` → le contournement
+  `left join union right join`, à présenter comme une limite du SGBD.
+- `group by` est **permissif** (colonnes non agrégées tolérées selon `ONLY_FULL_GROUP_BY`) :
+  un exemple peut « marcher » tout en étant une mauvaise pratique — piège pédagogique à signaler.
+- Import/export dans DBeaver : **`Dump database`** (mysqldump). Le dump ne contient ni
+  `create database` ni `use` : les étudiants ajoutent ces deux lignes à la main.
+- Import : **dans DBeaver uniquement** — ouvrir le `.sql` (`Fichier` → `Ouvrir un fichier…`)
+  puis `Alt + X` (*Execute script*), et `F5` pour rafraîchir l'arborescence.
+  **Ne pas réintroduire d'import en ligne de commande** : décision du prof (2026-09-17). Au
+  passage, `Get-Content ... | mariadb` remplace les accents par des `?` dans la base — c'est
+  vérifié, ne jamais l'écrire nulle part.
 
 ---
 
@@ -81,8 +129,8 @@ Le fichier `.github/workflows/agents/bd1.md` fait autorité. En résumé :
 
 - **Langue** : français (sauf noms techniques et code). Ton concret, progression graduelle,
   public collégial débutant. Sobre en emojis (les labs en ont un dans le H1, c'est tout).
-- **SQL** : mots-clés en **minuscules**, exemples **PostgreSQL**. Utiliser des alias de tables
-  dans les jointures.
+- **SQL** : mots-clés en **minuscules**, exemples **MariaDB**. Utiliser des alias de tables
+  dans les jointures. Tout script complet commence par son `use <base>;`.
 - **Domaine d'exemple par défaut** : thème « événements » (`evenement`, `participant`,
   `inscription`), pas les clichés bibliothèque/école.
 - **Nommage** enseigné : minuscules, sans accents, singulier, `snake_case`.
@@ -135,8 +183,8 @@ Le groupe 1 a lieu le **jeudi** : semaine 1 le 27 août, semaine de lecture le 1
 (après la semaine 7), semaine 16 le 17 décembre.
 
 Détails à savoir :
-- Le lien « Documentation MariaDB » dans `nav` (`config.mts`) est un reste d'une version antérieure
-  du cours : tout le contenu est passé à PostgreSQL.
+- Le lien « Documentation MariaDB » dans `nav` (`config.mts`) datait d'une version antérieure du
+  cours ; depuis la migration, il pointe de nouveau vers la bonne documentation — le laisser tel quel.
 - Le dépôt est un **fork** de `07B-BD/cours`. GitHub désactive Actions par défaut sur les forks :
   il faut l'activer une fois dans l'onglet *Actions* pour que `deploy.yml` se déclenche.
 - La branche `gh-pages` est créée par la première exécution réussie du workflow ; la source Pages

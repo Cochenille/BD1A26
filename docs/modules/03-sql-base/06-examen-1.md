@@ -99,7 +99,13 @@ Justifiez en proposant des exemples textuels des relations (ex.: un `entité` pe
    - modifiez les types de données mal choisis
    - complétez la table carte de crédit
 
-2) Testez votre code sur une nouvelle base de données.
+2) Testez votre code sur une **nouvelle base de données** : créez-la, puis sélectionnez-la avant
+   d'exécuter le reste du script.
+
+   ```sql
+   create database revision_examen1;
+   use revision_examen1;
+   ```
    
 3) Enregistrez votre code fonctionnel dans un fichier nommé `nom_prenom_revision.sql`.
 
@@ -108,7 +114,7 @@ create table client (
   -- Ajouter une clé primaire
   nom varchar(80),
   courriel varchar(120),
-  telephone numeric(12,0),
+  telephone decimal(12,0),
   est_actif boolean
 );
 

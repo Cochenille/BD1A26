@@ -11,6 +11,13 @@ aside: false
 >Dans cette vidéo, je démontre quelques requêtes plus complexes du laboratoire.
 <iframe width="560" height="315" src="https://www.youtube.com/embed/bOvQIp7RQ1U?si=n-1-1yRi9kGwewE2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+<div class="bg-red-50 border border-red-300 text-red-900 rounded-lg p-4 mt-3">
+<strong>⚠️ Vidéo à remplacer</strong><br>
+Cette capture vidéo a été enregistrée avec PostgreSQL. Les requêtes démontrées restent valides,
+mais l'interface et quelques détails de syntaxe ne correspondent plus au cours. Fiez-vous au
+texte de la page.
+</div>
+
 ### 1. Base de données de test à importer (c'est la même qu'au labo précédent)
 
 <div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
@@ -20,6 +27,12 @@ Pour réaliser ce labo, vous devez importer une <strong>base de données de test
 [BD de test](../modules/03-sql-base/02-select-where#base-de-donnees-de-test-a-importer)
 
 </div>
+
+Commencez votre script par :
+
+```sql
+use module_03_evenement_data;
+```
 
 ### 2. Exercices de modification de données
 
@@ -53,7 +66,7 @@ Avant chaque `update` ou `delete`, testez d'abord avec un `select` pour vérifie
 
 #### c) Intervals BETWEEN et listes IN
 - Événements prévus entre aujourd'hui et le 1er août 2026
-- Participants dans les villes "Paris", "Lyon", "Marseille"
+- Participants dont l'identifiant fait partie de la liste (1, 5, 10)
 - Événements avec capacité entre 100 et 500
 
 #### d) Élimination des doublons DISTINCT
@@ -72,4 +85,4 @@ Avant chaque `update` ou `delete`, testez d'abord avec un `select` pour vérifie
 
 #### c) Requêtes complexes multi-niveaux
 - Participants inscrits à des événements gratuits ET actifs
-- Participants **actifs** qui se sont inscrits à **au moins un événement payant** (prix > 0) **à Paris** ou **Lyon**, et dont **le nom contient "Tech"**
+- Participants **actifs** qui se sont inscrits à **au moins un événement payant** (prix > 0) **à Paris** ou **Lyon**, et dont **le nom de l'événement contient "Tech"**

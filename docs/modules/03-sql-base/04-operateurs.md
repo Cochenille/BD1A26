@@ -117,6 +117,20 @@ from evenement
 where nom like '%Conférence%';
 ```
 
+<div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
+<strong>⚠️ En MariaDB, <code>like</code> ignore la casse <em>et</em> les accents</strong><br>
+La collation par défaut (<code>utf8mb4_uca1400_ai_ci</code>) est <em>accent insensitive</em> et
+<em>case insensitive</em>. Ces trois écritures retournent donc <strong>exactement les mêmes
+lignes</strong> :<br>
+<code>like '%Conférence%'</code> · <code>like '%conférence%'</code> ·
+<code>like '%conference%'</code><br><br>
+C'est pratique pour une recherche, mais ce n'est <strong>pas</strong> le comportement de tous
+les SGBD : ailleurs (PostgreSQL, Oracle), <code>like</code> est sensible à la casse et aux
+accents. Ne comptez pas là-dessus dans du code qui doit être portable.<br><br>
+Pour une comparaison stricte, on ajoute <code>binary</code>, qui compare octet par octet :<br>
+<code>where nom like binary '%Conférence%'</code>
+</div>
+
 ---
 
 ### Exemple — Courriels se terminant par `example.com`

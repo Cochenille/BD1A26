@@ -10,7 +10,8 @@ aside: false
 - Modifier des données avec `update ... set ... where`
 - Supprimer des données avec `delete ... where`
 - Comprendre les **risques** liés aux opérations destructives
->Utiliser la même base de données qui a été importée précédemment.
+>Utiliser la même base de données qui a été importée précédemment. Commencez votre script par
+>`use module_03_evenement_data;`.
 
 ---
 

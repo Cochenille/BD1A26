@@ -3,6 +3,9 @@
 Suivi de la conversion du contenu du cours 420-07B-FX. On procède **un module à la fois**.
 Les tâches marquées 🧑 doivent être faites à la main (captures d'écran, fichiers .sql, PDF).
 
+👉 **La liste de travail consolidée est dans [`A-FAIRE.md`](A-FAIRE.md)** : captures à refaire,
+vidéos, vérifications DBeaver. Ce fichier-ci garde le détail et l'historique des décisions.
+
 ---
 
 ## Module 1 — Introduction ✅ TERMINÉ
@@ -139,26 +142,69 @@ relationnelle, lecture d'un MRD). Rien de PostgreSQL n'y était enseigné.
 
   Choix pédagogique assumé : le fichier remis doit être **autoportant**, et l'étudiant voit
   le SQL plutôt que de le déléguer à une commande.
-- Import : `psql -U postgres -f fichier.sql` → **une seule commande PowerShell** :
-
-  ```powershell
-  Get-Content tp_evenements.sql | mariadb -u root -p
-  ```
-
-  La variante `cmd` avec `<` a été retirée : une seule façon de faire.
+- Import : `psql -U postgres -f fichier.sql` → **plus de ligne de commande du tout**. Voir la
+  section « Import dans DBeaver » ci-dessous. *(La page est passée par deux versions
+  intermédiaires le 2026-09-17 : `Get-Content ... | mariadb`, puis
+  `mariadb -e "source ..."`, avant la décision de tout faire dans DBeaver.)*
 - L'erreur `No database selected` est nommée explicitement et renvoie à la section précédente.
 
-**🧑 À surveiller — accents dans les données importées**
-Le pipe `Get-Content | mariadb` passe par l'encodage de console de PowerShell 5.1, qui n'est
-pas UTF-8 par défaut. Le transport fonctionne (testé), mais **si vous voyez des accents
-mal importés** dans les données, la cause est là. Contournement :
+**✅ Accents à l'import — problème confirmé et corrigé (2026-09-17)**
+Le pipe `Get-Content | mariadb` **détruit les accents**. Ce n'est pas une hypothèse : testé avec
+`module_03_evenement_data.sql`, la ligne « Bruno Lefèvre » arrive en base sous la forme
+« Bruno Lef??vre » — 14 caractères pour 14 octets, donc du pur ASCII : le `è` a été remplacé par
+deux vrais points d'interrogation **dans les données**, pas seulement à l'affichage. Le fichier
+source est pourtant bien en UTF-8 (`0xC3 0xA8`). PowerShell 5.1 ré-encode le texte vers la page
+de code de la console avant de le passer à `mariadb.exe`, et ce qui n'est pas représentable
+devient `?`.
 
-```powershell
-mariadb -u root -p --default-character-set=utf8mb4 -e "source tp_evenements.sql"
-```
+Conséquence : toutes les recherches texte échouent (`like '%conférence%'` retournait 0 ligne).
 
-(le client lit le fichier lui-même, sans passer par le pipe), ou forcer la console en UTF-8
-avec `chcp 65001` avant l'import. À tester avec un jeu de données accentué.
+Le contournement vérifié était `mariadb -u root -p --default-character-set=utf8mb4 -e "source
+fichier.sql"` — le client ouvre le fichier lui-même, sans passer par le pipe (accents intacts :
+13 caractères / 14 octets pour « Bruno Lefèvre »).
+
+---
+
+## Import dans DBeaver — décision du prof (2026-09-17)
+
+Plutôt que de corriger la commande, **la ligne de commande est retirée du cours** : les étudiants
+importent uniquement par DBeaver. L'export s'y faisait déjà (`Dump database`), donc l'import et
+l'export sont maintenant au même endroit, et le problème d'encodage du pipe PowerShell disparaît
+avec la commande.
+
+Marche à suivre enseignée :
+1. `Fichier` → `Ouvrir un fichier…` (ou glisser-déposer le `.sql` dans DBeaver).
+2. Vérifier la connexion active dans la barre d'outils.
+3. **`Alt + X`** (*Execute script*) — avec un encadré qui insiste : `Ctrl + Entrée` n'exécute
+   qu'une seule instruction, ce qui est le piège classique sur un fichier de plusieurs centaines
+   d'instructions.
+4. `F5` pour rafraîchir l'arborescence.
+
+Encadrés conservés/ajoutés : `No database selected`, « des `?` à la place des accents »
+(l'explication reste utile, la cause possible devient l'encodage de lecture de DBeaver), et
+l'avertissement sur l'écrasement des données.
+
+Pages touchées : `02-ddl-base/07-import-export.md` (section, démo et « À retenir »), et
+`03-sql-base/01-insert.md` / `02-select-where.md`.
+
+**Décisions prises (2026-09-17)**
+- `import-command.png` (la commande dans `cmd`) : `<img>` retiré de la page **et fichier
+  supprimé** du dépôt.
+- L'encadré « Avez-vous ajouté le client MariaDB à votre PATH ? » a été retiré de cette page,
+  mais **l'étape PATH reste dans le lab 01** : elle sert toujours à vérifier l'installation avec
+  `mariadb --version`. L'ancre `#ajouter-au-path` n'est donc plus référencée par aucune page —
+  c'est normal, ne pas la « nettoyer ».
+
+**🧑 À vérifier pendant la prise de captures**
+- Le libellé exact du menu d'ouverture de fichier et le nom de l'entrée
+  `SQL Editor` → `Execute script` dans votre version de DBeaver.
+- J'ai écrit « vérifier l'encodage dans les préférences de DBeaver » sans donner le chemin exact
+  du menu, faute de pouvoir le confirmer.
+- 🧑 Une capture DBeaver de l'import (ouverture du fichier + *Execute script*) remplacerait
+  avantageusement celle qui a été supprimée — la section n'a plus d'illustration.
+
+🧑 **À faire** : prévenir les étudiants qui ont déjà importé un jeu de données accentué avec
+`Get-Content | mariadb` — leurs données contiennent des `?` et doivent être réimportées.
 
 ---
 
@@ -186,7 +232,7 @@ avec `chcp 65001` avant l'import. À tester avec un jeu de données accentué.
 | `schema.png` | Le diagramme des 3 tables |
 | `erreur.png` | L'erreur *Cannot delete or update a parent row* |
 | `backup.png` / `backup-tables.png` / `backup-options.png` | Le dialogue **Dump database** |
-| `import-command.png` | La commande `mariadb -u root -p < ...` dans cmd |
+| ~~`import-command.png`~~ | Supprimée : l'import se fait maintenant dans DBeaver |
 
 **Supprimées** : `session-manager.png`, `terminate.png` (spécifiques à PostgreSQL).
 
@@ -261,19 +307,126 @@ Le corrigé présente donc uniquement les blocs table par table.
 
 ---
 
-## Module 3 — SQL de base ⏳ À FAIRE
+## Module 3 — SQL de base ✅ TERMINÉ (texte)
 
-Le SQL de base (`insert`, `select/where`, `update/delete`, opérateurs, sous-requêtes)
-est presque identique. Points d'attention :
-- Commandes d'import `psql -U postgres -f ...` en début de page (01, 02).
-- Le prompt d'IA pour générer des INSERT mentionne PostgreSQL (01-insert.md).
-- Le reste du SQL enseigné (`like`, opérateurs, `limit`, sous-requêtes) est compatible.
-  Nuance à ajouter : en MariaDB, `like` est **insensible à la casse** par défaut (collation
-  `_ci`), contrairement à PostgreSQL — les exemples de recherche texte sont à revalider.
+Le SQL enseigné dans ce module (`insert`, `select/where`, `update/delete`, opérateurs,
+sous-requêtes non corrélées) est compatible tel quel : aucune requête d'exemple n'a dû être
+réécrite. Le travail a porté sur l'import, les jeux de données et deux nuances de MariaDB.
 
-🧑 **Captures** : `dbeaver-location.png`, `ouvrir-dbeaver.png`, `voir-donnees.png` (3).
-🧑 **Fichiers .sql** : `module_03_evenement_empty.sql` et `module_03_evenement_data.sql`
-(dans `docs/public/databases/`) à reconvertir en syntaxe MariaDB.
+**Jeux de données — réécrits à la main** (`docs/public/databases/`)
+Les deux fichiers étaient des `pg_dump` (`COPY ... FROM stdin`, `SET` PostgreSQL, séquences,
+`connect`, schéma `public`). Ils sont maintenant des **scripts MariaDB lisibles** que les
+étudiants peuvent ouvrir et comprendre :
+- `drop database if exists` + `create database ... character set utf8mb4` + `use` en tête,
+  donc **autoportants** (même principe que l'export enseigné au module 2).
+- `serial`/séquences → `int primary key auto_increment`; `numeric(8,2)` → `decimal(8,2)`;
+  `default CURRENT_DATE` → `default (current_date)`; contraintes `unique`/`check`/FK conservées.
+- `COPY ... FROM stdin` → `insert into ... values`, avec les **id explicites** pour que les
+  clés étrangères des inscriptions restent valides (30 événements, 47 participants,
+  54 inscriptions — données identiques à la version PostgreSQL).
+- **Nom des bases corrigé** : `module_03_evenements_empty`/`_data` (pluriel) →
+  `module_03_evenement_empty`/`_data` (singulier). C'est le nom qu'utilisait déjà le lab 04 et
+  il respecte la convention de nommage enseignée.
+- ⚠️ Différence conservée telle quelle : la base *empty* n'a **pas** les colonnes
+  `evenement.prix` ni `inscription.actif`, contrairement à la base *data*. C'était déjà le cas
+  en PostgreSQL.
+
+**`01-insert.md`**
+- Import `psql -U postgres -f ...` → ouverture du `.sql` dans DBeaver et `Alt + X`,
+  avec un encadré qui rappelle que le fichier est autoportant et qu'il faut commencer son script
+  par `use module_03_evenement_empty;`.
+- Encadré bleu : un `boolean` MariaDB s'affiche 1/0 dans l'onglet *Données*.
+- « clés primaires générées par PostgreSQL » → « générées par la colonne `auto_increment` », et
+  les deux prompts d'IA demandent maintenant du SQL **MariaDB**.
+
+**`02-select-where.md`**
+- Même traitement pour l'import (`module_03_evenement_data`).
+- Nouvel encadré « Les booléens en MariaDB » : `where actif = true`, `= 1` et `where actif`
+  sont équivalents.
+- `limit` : aucune modification, la syntaxe est identique.
+
+**`03-update-delete.md`** — ajout du `use module_03_evenement_data;` en tête. Les 8 exemples
+`update`/`delete` fonctionnent sans changement.
+
+**`04-operateurs.md`** — ajout de l'encadré jaune **« `like` ignore la casse »** : collations
+`_ci` par défaut, mention que les accents peuvent aussi être ignorés selon la collation, et
+`like binary` pour forcer la sensibilité à la casse.
+
+**`05-sous-requetes-non-correlees.md`** — aucune modification nécessaire (`in`, `any`, `all`
+se comportent pareil).
+
+**`06-examen-1.md`** — `numeric(12,0)` → `decimal(12,0)`; l'étape « testez sur une nouvelle base
+de données » donne maintenant le `create database` + `use`.
+
+**`index.md`** — les deux liens « Lab » pointaient tous les deux vers `lab03-ddl` (copié-collé).
+Corrigés vers `lab04-select` et `lab05-avance`.
+
+---
+
+## Labs 04 et 05 ✅ TERMINÉ (texte)
+
+Le SQL de ces deux labos est déjà compatible MariaDB; les corrections portent sur le contexte.
+
+**`lab04-select.md`**
+- `title` du frontmatter : « Lab 03 » → « Lab 04 » (désynchronisé avec le H1).
+- « portée : base de données `module_03_evenement_data` » → un bloc `use module_03_evenement_data;`
+  à mettre en tête du script.
+
+**`lab05-avance.md`**
+- ⚠️ Bandeau rouge ajouté sous la vidéo YouTube : elle a été enregistrée avec PostgreSQL.
+- Ajout du `use module_03_evenement_data;`.
+- **Bug pré-existant corrigé** — exercice 3c) « Participants dans les villes "Paris", "Lyon",
+  "Marseille" » : la table `participant` n'a pas de colonne de ville, l'exercice était
+  impossible. Remplacé par « Participants dont l'identifiant fait partie de la liste (1, 5, 10) »,
+  ce qui garde l'objectif (`in` sur une liste). À changer si vous aviez autre chose en tête.
+
+**Domaines de courriel variés — correction du 2026-09-17**
+L'exercice 3b) « Participants dont le courriel se termine par `@gmail.com` » retournait 0 ligne :
+les 47 participants avaient tous une adresse `@example.com`. Le même défaut rendait l'exemple
+« Courriels se terminant par `example.com` » de `03-sql-base/04-operateurs.md` inutile, puisqu'il
+retournait tout le monde.
+
+Plutôt que de réécrire l'énoncé, **12 participants du jeu de données sont passés à un domaine
+personnel** dans `module_03_evenement_data.sql` : 7 `@gmail.com`, 3 `@hotmail.com`,
+2 `@outlook.com`. Il reste 35 `@example.com`, et les 47 adresses restent distinctes
+(contrainte `unique`).
+
+Les deux adresses citées ailleurs dans le cours ont été **volontairement épargnées** :
+`bruno.lefevre@example.com` (lab 05, exercice 2b) et `julie.petit2@example.com`
+(`03-sql-base/03-update-delete.md`, exemple 3). Ne pas les modifier.
+
+Les deux exercices fonctionnent maintenant : `like '%@gmail.com'` → 7 lignes,
+`like '%@example.com'` → 35 lignes. Aucun énoncé n'a eu besoin d'être réécrit.
+
+⚠️ La base doit être **réimportée** pour que le changement prenne effet.
+
+**Formulation clarifiée — 2026-09-17**
+4c) disait « ... et dont **le nom** contient "Tech" », ce qui se lisait comme le nom du
+participant. Confirmé par le prof : c'est le **nom de l'événement**. L'énoncé dit maintenant
+« et dont **le nom de l'événement** contient "Tech" ».
+
+Vérifié sur les données : un seul événement correspond (« Conférence Tech 2026 », Paris,
+prix 50), et il compte 3 inscrits, tous actifs — l'exercice retourne donc 3 lignes.
+Attention en corrigeant : « Conférence FinTech » contient aussi « Tech », mais elle a lieu à
+La Défense, donc elle est exclue par le filtre sur le lieu.
+
+**✅ Validé sur serveur le 2026-09-17** (MariaDB 12.3)
+- Les deux scripts s'importent sans erreur; compteurs conformes : 30 événements, 47 participants,
+  54 inscriptions.
+- `show create table inscription` confirme `date_inscription date NOT NULL DEFAULT curdate()` :
+  la forme `default (current_date)` **fonctionne** (question ouverte depuis le module 2, réglée).
+- `unique (evenement_id, participant_id)` sans le mot `INDEX` compile : la contrainte apparaît
+  comme `UNIQUE KEY`. Le mot-clé `INDEX`/`KEY` est optionnel dans la grammaire MariaDB.
+- `ENGINE=InnoDB`, `AUTO_INCREMENT=62`, `DEFAULT CHARSET=utf8mb4`, les deux FK en place.
+- Collation du serveur : `utf8mb4_uca1400_ai_ci` — **insensible à la casse ET aux accents**.
+  `like '%Conférence%'`, `'%conférence%'` et `'%conference%'` retournent les mêmes 7 lignes.
+  L'encadré de `04-operateurs.md` est donc écrit en affirmation, plus en « à vérifier ».
+- ⚠️ Le premier import, fait avec `Get-Content | mariadb`, avait détruit les accents. Voir la
+  section du module 2 ci-dessus.
+
+🧑 **Captures à revoir — 3** : `dbeaver-location.png`, `ouvrir-dbeaver.png` (indépendantes du
+SGBD, probablement réutilisables telles quelles) et `voir-donnees.png` (montre l'onglet
+*Données* de DBeaver sur PostgreSQL — à recapturer sur MariaDB, on y verra le 1/0 des booléens).
 
 ---
 
@@ -336,5 +489,5 @@ le texte du SVG) — à refaire selon le modèle utilisateur@hôte de MariaDB.
 | `docs/public/databases/*.sql` | — | Tous les jeux de données à reconvertir 🧑 |
 | `docs/public/plan-cours.pdf` | — | Le PDF mentionne probablement PostgreSQL 🧑 |
 | `docs/.vitepress/config.mts` | — | Le lien nav « Documentation MariaDB » redevient correct ✅ |
-| `.github/workflows/agents/bd1.md` | — | Conventions de rédaction : « Préférer des exemples PostgreSQL » |
-| `CLAUDE.md` | — | « SGBD enseigné : PostgreSQL » |
+| `.github/workflows/agents/bd1.md` | — | ✅ Converti le 2026-09-17 (consigne MariaDB + écarts à éviter) |
+| `CLAUDE.md` | — | ✅ Converti le 2026-09-17 (section « Migration PostgreSQL → MariaDB ») |

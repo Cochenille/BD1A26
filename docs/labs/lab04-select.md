@@ -1,5 +1,5 @@
 ---
-title: "Lab 03 — Requêtes de sélection avec filtres"
+title: "Lab 04 — Requêtes de sélection avec filtres"
 aside: false
 ---
 
@@ -19,7 +19,11 @@ Pour réaliser ce labo, vous devez importer une <strong>base de données de test
 
 ### Écrire des requêtes `select`
 
-Créez un nouveau script SQL dans DBeaver (portée : base de données `module_03_evenement_data`).
+Créez un nouveau script SQL dans DBeaver et **commencez-le par son `use`** :
+
+```sql
+use module_03_evenement_data;
+```
 
 Écrivez et exécutez les requêtes suivantes, une par une (chaque puce représente une requête `select`) :
 

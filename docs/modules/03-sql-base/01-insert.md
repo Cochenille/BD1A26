@@ -31,12 +31,18 @@ Le fichier contient la structure des tables de la démonstration :
 
 ### Importation
 
-Téléchargez le fichier SQL, puis exécutez dans un invite de commandes :<br>
-**Changez le chemin d'accès du fichier selon où vous l'avez placé.**
+Téléchargez le fichier SQL, puis **ouvrez-le dans DBeaver** (`Fichier` → `Ouvrir un fichier…`,
+ou par glisser-déposer) et exécutez **tout le script** avec `Alt + X`.
 
-```bash
-psql -U postgres -f "C:\Users\Admin\Desktop\module_03_evenement_empty.sql"
-```
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>Ce fichier est autoportant</strong><br>
+Il contient déjà le <code>create database</code> et le <code>use</code> : il crée la base
+<code>module_03_evenement_empty</code> et la sélectionne.<br>
+Rafraîchissez le navigateur de bases de données avec <code>F5</code> pour voir apparaître la
+base, puis commencez votre script par <code>use module_03_evenement_empty;</code>.<br>
+Marche à suivre détaillée : <a href="./../02-ddl-base/07-import-export">Import et export d'une
+base de données</a>.
+</div>
 
 ---
 
@@ -67,6 +73,8 @@ values ('Nina Patel', 'nina.patel@example.com');
 
   - Les `valeurs` sont écrites dans l'ordre que les colonnes sont nommées.
   - Les valeurs par défaut ou autogénérées peuvent être omises (`id`, `actif`)
+  - En MariaDB, un `boolean` est stocké comme un `tinyint(1)` : il s'affiche **1** (vrai) ou
+    **0** (faux) dans l'onglet *Données*, même si on l'a inséré avec `true`.
 
 </div>
 
@@ -130,13 +138,13 @@ De plus :
 La génération des données se fait en **deux étapes** :
 
 1. Générer les données pour les tables **sans clés étrangères**
-2. Générer ensuite les données pour les tables **avec clés étrangères**, en se basant sur les clés primaires réellement créées par PostgreSQL
+2. Générer ensuite les données pour les tables **avec clés étrangères**, en se basant sur les clés primaires réellement créées par MariaDB
 
 ---
 
 <div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
 <strong>Important</strong><br>
-Il est impossible de savoir à l’avance quelles valeurs de clés primaires seront générées par PostgreSQL.<br>
+Il est impossible de savoir à l’avance quelles valeurs de clés primaires seront générées par la colonne <code>auto_increment</code>.<br>
 Elles ne sont <strong>pas nécessairement</strong> 1, 2, 3, 4, 5, etc.<br><br>
 Les requêtes INSERT qui utilisent des clés étrangères doivent donc être générées <strong>après</strong> l’insertion des premières données.
 </div>
@@ -151,7 +159,7 @@ Copiez le  [**script de création des tables**](./../02-ddl-base/05-demo-ddl.md#
 (ou un export SQL de votre base de données), puis envoyez la requête suivante à l’IA :
 
 ```text
-À partir du script de création des tables fourni, génère des INSERT SQL pour PostgreSQL
+À partir du script de création des tables fourni, génère des INSERT SQL pour MariaDB
 uniquement pour les tables sans clés étrangères.
 
 Contraintes :
@@ -189,7 +197,7 @@ INSERT INTO participant (nom, courriel, actif) VALUES
 Une fois les premières données insérées, envoyez une seconde requête :
 
 ```text
-Voici les clées primaires générées pour les tables événement et participant dans ma base de données PostgreSQL.
+Voici les clées primaires générées pour les tables événement et participant dans ma base de données MariaDB.
 À partir des clés primaires réellement générées, génère des INSERT SQL
 pour les tables contenant des clés étrangères.
 

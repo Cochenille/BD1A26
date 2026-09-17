@@ -82,45 +82,45 @@ C'est exactement ce qu'on attend d'un fichier remis dans un travail.
 
 ---
 
-## Importer une base de données (ligne de commande)
+## Importer une base de données (DBeaver)
 
 Le fichier contient maintenant tout ce qu'il faut :
 - la création de la base de données (CREATE DATABASE)
 - la sélection de la base de données (USE)
 - la création des tables, contraintes et données
 
-Il suffit donc **d'exécuter le fichier SQL au complet**.
-On le fait en ligne de commande : le fichier contient des centaines d'instructions, et le
-client `mariadb` les exécute toutes d'un coup, dans l'ordre.
-
-<div class="bg-yellow-50 border border-yellow-300 text-yellow-900 rounded-lg p-4">
-<strong>Avez-vous ajouté le client MariaDB à votre PATH?</strong><br>
-
-[Ajouter le client MariaDB au PATH](../../labs/lab01-installations.md#ajouter-au-path)
-</div>
+Il suffit donc **d'exécuter le fichier SQL au complet**. Le fichier contient des centaines
+d'instructions : DBeaver les exécute toutes d'un coup, dans l'ordre.
 
 ---
 
-### Commande à utiliser
+### Étapes d'importation
 
-Dans **PowerShell**, à partir du dossier qui contient le fichier `.sql` :
+- Dans DBeaver, menu `Fichier` → `Ouvrir un fichier…`, puis choisir le fichier `.sql`.
+  (Le glisser-déposer du fichier dans la fenêtre de DBeaver fonctionne aussi.)
+- Le fichier s'ouvre dans un éditeur SQL. Vérifier dans la barre d'outils que la
+  **connexion active** est bien votre serveur MariaDB.
+- Exécuter **tout le script** avec `Alt + X` (menu `SQL Editor` → `Execute script`).
+- Rafraîchir le navigateur de bases de données avec `F5` : la base apparaît dans l'arborescence.
 
-```powershell
-Get-Content tp_evenements.sql | mariadb -u root -p
-```
-
-Le mot de passe de `root` vous sera demandé après avoir appuyé sur Entrée.
-
-#### Signification des options utilisées
-
-- <code>Get-Content ... |</code> : lit le fichier et l'envoie au client MariaDB.
-- <code>-u root</code> : le **nom de l'utilisateur MariaDB** utilisé pour se connecter.
-- <code>-p</code> : demande le **mot de passe** de cet utilisateur.
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4 mb-5">
+<strong>⚠️ <code>Alt + X</code>, et non <code>Ctrl + Entrée</code></strong><br>
+<code>Ctrl + Entrée</code> exécute <strong>une seule instruction</strong> : celle où se trouve le
+curseur. Un fichier d'import en contient des centaines. C'est <code>Alt + X</code>
+(<em>Execute script</em>) qui les exécute toutes.
+</div>
 
 <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4 mb-5">
 <strong>Erreur <code>No database selected</code></strong><br>
 Vous avez oublié d'ajouter les deux lignes en haut du fichier. Revenez à la section
 précédente.
+</div>
+
+<div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4 mb-5">
+<strong>Des <code>?</code> à la place des accents ?</strong><br>
+Le fichier n'a pas été lu en UTF-8. Vérifier l'encodage dans les préférences de DBeaver, puis
+réimporter : une fois les <code>?</code> enregistrés dans la base, ils y restent et plus aucune
+requête ne retrouve « Bruno Lefèvre ».
 </div>
 
 <div class="bg-red-50 border border-red-300 text-red-900 rounded-lg p-4 mb-5">
@@ -130,8 +130,6 @@ S'assurer que le fichier SQL correspond bien au travail à importer.<br>
 Encore une fois, toujours conserver une copie fonctionnelle des instructions que vous avez écrites pour votre travail.
 </div>
 
-<img src="./images/import-command.png" alt="Import" class="img-bordered mb-5" />
-
 ---
 
 ## Démo
@@ -139,11 +137,11 @@ Encore une fois, toujours conserver une copie fonctionnelle des instructions que
 - Exporter une base de données avec DBeaver.
 - Repérer le fichier <code>.sql</code> généré.
 - Ajouter le <code>create database</code> et le <code>use</code> au début du fichier.
-- Exécuter le fichier avec <code>mariadb</code>.
+- Exécuter le fichier dans DBeaver avec <code>Alt + X</code>.
 - Vérifier que la base de données, les tables et les relations sont recréées.
 
 <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-4">
-Si vous voulez être vraiment certain que ça fonctionne, supprimez manuellement votre base de données dans DBeaver avant l'exécution de la commande.
+Si vous voulez être vraiment certain que ça fonctionne, supprimez manuellement votre base de données dans DBeaver avant d'exécuter le script.
 </div>
 
 ---
@@ -156,6 +154,6 @@ Si vous voulez être vraiment certain que ça fonctionne, supprimez manuellement
   <li>Importer = recréer une base de données</li>
   <li>L'export de DBeaver <strong>n'inclut pas</strong> le <code>create database</code> ni le <code>use</code> : il faut les ajouter au fichier</li>
   <li>Un fichier bien préparé recrée la base à lui seul, sur n'importe quelle machine</li>
-  <li>L'export se fait dans DBeaver, l'import se fait en ligne de commande</li>
+  <li>L'export et l'import se font tous les deux dans DBeaver</li>
 </ul>
 </div>

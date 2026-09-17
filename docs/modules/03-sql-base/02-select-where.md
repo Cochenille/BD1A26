@@ -28,12 +28,18 @@ Celle-ci contient plus de données.
 
 ### Importation
 
-Téléchargez le fichier SQL, puis exécutez dans un invite de commandes :<br>
-**Changez le chemin d'accès du fichier selon où vous l'avez placé.**
+Téléchargez le fichier SQL, puis **ouvrez-le dans DBeaver** (`Fichier` → `Ouvrir un fichier…`,
+ou par glisser-déposer) et exécutez **tout le script** avec `Alt + X`.
 
-```bash
-psql -U postgres -f "C:\Users\Admin\Desktop\module_03_evenement_data.sql"
-```
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>Ce fichier est autoportant</strong><br>
+Il contient déjà le <code>create database</code> et le <code>use</code> : il crée la base
+<code>module_03_evenement_data</code> et la sélectionne.<br>
+Rafraîchissez le navigateur de bases de données avec <code>F5</code> pour voir apparaître la
+base, puis commencez votre script par <code>use module_03_evenement_data;</code>.<br>
+Marche à suivre détaillée : <a href="./../02-ddl-base/07-import-export">Import et export d'une
+base de données</a>.
+</div>
 
 ---
 
@@ -180,6 +186,14 @@ select nom
 from evenement  
 where actif = true;
 ```
+
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>Les booléens en MariaDB</strong><br>
+MariaDB n'a pas de vrai type booléen : <code>boolean</code> est un <code>tinyint(1)</code>.
+La colonne s'affiche donc <strong>1</strong> ou <strong>0</strong>, et les trois écritures
+suivantes sont équivalentes :<br>
+<code>where actif = true</code>, <code>where actif = 1</code>, <code>where actif</code>.
+</div>
 
 ---
 
