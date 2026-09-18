@@ -225,15 +225,10 @@ de départ** — insertions, sélections, sous-requêtes, modifications, suppres
 # Partie B — en classe, supervisée (7 %)
 
 La partie B a lieu **le 22 octobre**, en début de période, et dure **une heure**.
+Elle porte sur les mêmes notions que la partie A.
 
-- Elle porte sur les **mêmes notions** que la partie A : `insert`, `select`, opérateurs,
-  sous-requêtes, `update` et `delete` ciblés.
-- Elle se fait sur une **base fournie sur place**, déjà remplie : même structure que la partie A,
-  données différentes. Vous n'avez rien à préparer ni à importer d'avance.
-- Environ **six questions courtes**, du même type que celles de la partie A.
-- Documentation permise : **le site du cours uniquement**. Aucune autre aide (autres sites, IA,
-  notes d'un collègue).
-- Remise du fichier `.sql` à la fin de la période.
+**Les consignes complètes vous seront remises en classe ce jour-là.** Vous n'avez rien à
+préparer, rien à importer et rien à apporter : tout le matériel est fourni sur place.
 
 <div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
 <strong>Comment s'y préparer</strong><br>

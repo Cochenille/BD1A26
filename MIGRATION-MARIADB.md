@@ -472,7 +472,12 @@ refait en deux parties, dont une évaluée en classe sous surveillance.
 
 Le dépôt `Cochenille/BD1A26` est **public** (vérifié). L'énoncé de la partie B, son corrigé et sa
 base remplie ne sont donc **pas** dans le dépôt : ils ont été remis au prof directement.
-Le site ne décrit que le format de la partie B.
+
+Le TP2 est découpé en **deux pages** (décision du prof, 2026-09-18) pour que les étudiants
+n'aient pas le déroulement de l'évaluation supervisée avant d'entrer en classe :
+`tp2-sql.md` (partie A) n'annonce que la date, la durée et le poids de la partie B, et
+`tp2-partie-b.md` porte le déroulement — page **non listée**, à décommenter dans `config.mts`
+au début de la période du 22 octobre. Le nombre de questions a aussi été retiré de la grille.
 
 🧑 Importer une fois `tp2_guilde_partie_b.sql` dans DBeaver pour confirmer les résultats du
 corrigé : ils ont été calculés hors SGBD, faute d'accès au serveur local.

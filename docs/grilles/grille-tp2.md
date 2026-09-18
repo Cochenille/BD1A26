@@ -9,7 +9,7 @@ Le TP2 vaut **13 %** de la note finale, répartis en deux parties :
 | Partie | Description | Poids |
 |---|---|---|
 | **A** | Travail à la maison — insertions et 12 requêtes | 6 % |
-| **B** | Évaluation supervisée en classe — 6 questions sur une base fournie | 7 % |
+| **B** | Évaluation supervisée en classe, sur une base fournie | 7 % |
 
 Chaque critère est évalué selon des niveaux de performance. Les pondérations indiquent le poids
 de chaque critère dans la note de la partie concernée.
@@ -63,7 +63,7 @@ Un fichier qui s'interrompt à la première instruction est corrigé tel quel.
 
 # Partie B — évaluation supervisée (7 %)
 
-Six questions courtes sur une base fournie en classe, corrigées **à la requête**. Chaque question
+Questions courtes sur une base fournie en classe, corrigées **à la requête**. Chaque question
 vaut le même nombre de points.
 
 | Niveau | Description | Note |
