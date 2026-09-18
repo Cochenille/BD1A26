@@ -3,7 +3,7 @@ title: "Lab 04 — Requêtes de sélection avec filtres"
 aside: false
 ---
 
-# 🧪 Laboratoire 04 — Requêtes de sélection avec filtres
+# Lab 04 — Requêtes de sélection avec filtres
 
 ## Travail à réaliser
 

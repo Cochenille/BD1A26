@@ -3,7 +3,7 @@ title: "Lab 06 — Jointures"
 aside: false
 ---
 
-# 🧪 Laboratoire 06 — Jointures
+# Lab 06 — Jointures
 
 ## Travail à réaliser
 

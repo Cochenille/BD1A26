@@ -3,7 +3,7 @@ title: "Lab 07 — Agrégations"
 aside: false
 ---
 
-# 🧪 Laboratoire 07 — Agrégations
+# Lab 07 — Agrégations
 
 ## Travail à réaliser
 

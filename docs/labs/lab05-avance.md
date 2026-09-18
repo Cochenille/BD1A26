@@ -3,7 +3,7 @@ title: "Lab 05 — Modification, opérateurs et sous-requêtes"
 aside: false
 ---
 
-# 🧪 Laboratoire 05 — Modification, opérateurs et sous-requêtes
+# Lab 05 — Modification, opérateurs et sous-requêtes
 
 ## Travail à réaliser
 

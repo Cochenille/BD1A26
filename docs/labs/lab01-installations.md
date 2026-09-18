@@ -2,7 +2,7 @@
 title: "Lab — Installation et création de la base de données"
 ---
 
-# 🧪 Laboratoire 01 — Installation et création de la base de données
+# Lab 01 — Installation et création de la base de données
 
 
 <div class="bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-4">

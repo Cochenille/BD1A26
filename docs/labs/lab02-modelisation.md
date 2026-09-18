@@ -3,7 +3,7 @@ title: "Lab — Modélisation (papier-crayon) : Événements"
 aside: false
 ---
 
-# 🧪 Laboratoire 02 — Modélisation : Système d’événements
+# Lab 02 — Modélisation : Système d’événements
 
 ## But
 Produire sur papier un **MRD** (modèle relationnel de données) comprenant :
