@@ -430,6 +430,55 @@ SGBD, probablement réutilisables telles quelles) et `voir-donnees.png` (montre 
 
 ---
 
+## Évaluations — refonte du 2026-09-18
+
+Décision du prof : l'examen 1 se fait **sur papier**, en classe, et porte sur **toute la matière
+depuis le début de la session** (modules 1 à 3). Safe Exam Browser n'est plus utilisé. Le TP2 est
+refait en deux parties, dont une évaluée en classe sous surveillance.
+
+### `03-sql-base/06-examen-1.md` — réécrite
+
+- Modalités Safe Exam Browser retirées (installation, simulation `.seb`, mots de passe, sortie),
+  ainsi que l'encadré « DBeaver doit être dans Program Files » qui n'existait que pour SEB.
+- Consigne inversée : **écrire à la main d'abord, vérifier dans DBeaver ensuite**.
+- Couverture élargie aux modules 1 et 2, qui n'étaient presque pas représentés :
+  - partie 1 — lecture d'un MRD (diagramme **Mermaid `erDiagram`**, rendu vérifié dans le
+    navigateur) et construction d'un modèle à partir de règles d'affaires (salle, diffuseur);
+  - partie 2 — un script fautif à corriger, avec corrigé : `serial`, `create type ... as enum`,
+    ordre de création des tables, type de FK ≠ type de PK, `varchar` sans longueur, `use`
+    manquant, `time` au lieu de `datetime`;
+  - partie 3 — cinq requêtes dont il faut **prédire le résultat** sur un jeu de données imprimé.
+    Deux d'entre elles portent sur la collation `_ai_ci` : `like '%é%'` retrouve les `e` sans
+    accent, et `= 'quebec'` retrouve `'Québec'`.
+- Les images `dbeaver-location.png` et `ouvrir-dbeaver.png` ne sont plus référencées nulle part.
+
+### `travaux/tp2-sql.md` — refait et converti
+
+- Le DDL de l'énoncé était le dernier gros bloc PostgreSQL du site : `create database` sans `;`
+  ni `use`, trois `create type ... as enum`, trois `serial`. Réécrit en MariaDB et sorti dans
+  `docs/public/databases/tp2_guilde_structure.sql` (sans `drop database`, pour qu'un étudiant ne
+  détruise pas ses insertions en réexécutant le script).
+- `palladin` corrigé en `paladin` dans l'enum des classes.
+- Structure : **partie A** à la maison (6 %) — 30 à 60 lignes par table au lieu de 50 à 100, et
+  12 requêtes au lieu de 16, pour laisser le temps des labos; **partie B** en classe, supervisée
+  (7 %). Le fichier de départ et la grille suivent la nouvelle numérotation.
+- Les 12 blocs `.eval` sont conservés et leur texte varié en trois formulations. Ils demandent
+  toujours des **jointures**, qui ne sont pas enseignées avant le module 4 : une réponse d'IA
+  reste immédiatement reconnaissable.
+- 🧑 La **vidéo explicative** a été retirée : elle décrivait l'ancien énoncé (16 questions) et
+  avait été enregistrée en PostgreSQL. À réenregistrer si désirée.
+
+### Partie B — hors dépôt
+
+Le dépôt `Cochenille/BD1A26` est **public** (vérifié). L'énoncé de la partie B, son corrigé et sa
+base remplie ne sont donc **pas** dans le dépôt : ils ont été remis au prof directement.
+Le site ne décrit que le format de la partie B.
+
+🧑 Importer une fois `tp2_guilde_partie_b.sql` dans DBeaver pour confirmer les résultats du
+corrigé : ils ont été calculés hors SGBD, faute d'accès au serveur local.
+
+---
+
 ## Module 4 — Jointures et agrégations ⏳ À FAIRE
 
 - `01-expressions-regulieres.md` — **page la plus touchée du module** (~30 mentions).

@@ -1,60 +1,59 @@
 -- ============================================================
 -- TP2 — Registre de la Guilde des Aventuriers
--- Fichier de départ
---		- ne pas modifier l'ordre des requêtes
+-- Partie A — fichier de reponses
+--		- ne pas modifier l'ordre des requetes
 --		- ne pas ajouter/modifier les commentaires
+--		- renommer le fichier tp2_prenom_nom.sql
 -- ============================================================
 
+use guilde_aventuriers;
+
 -- ============================================================
--- Insertion des données (minimum 50 lignes par table)
+-- Insertion des donnees (minimum 30 lignes par table)
 -- ============================================================
 
--- I1) Insertion des quêtes
+-- I1) Insertion des quetes
 
 -- I2) Insertion des aventuriers
 
 -- I3) Insertion des contrats
 
 -- ============================================================
--- Requêtes de sélection
+-- Requetes de selection
 -- ============================================================
 
--- 1) liste quetes
+-- 1) quetes actives non expirees
 
--- 2) quetes actives
+-- 2) lieux distincts
 
--- 3) quetes faciles avec recompense superieure
+-- 3) aventuriers actifs
 
--- 4) lieux distincts
+-- 4) classes et plage de niveaux
 
--- 5) aventuriers actifs
+-- 5) aventuriers par debut de nom
 
--- 6) classes et niveau
-
--- 7) aventuriers début nom
-
--- 8) contrats filtres
-
--- 9) contrats coherents
-
--- 10) aventuriers en cours
-
--- 11) contrats reussis recompense
-
--- 12) quetes sans contrat
+-- 6) contrats en cours sur une periode
 
 -- ============================================================
--- Modifications (mise à jour)
+-- Sous-requetes
 -- ============================================================
 
--- 13) correction recompense
+-- 7) quetes faciles mieux payees qu'une quete perilleuse
 
--- 14) desactivation contrats
+-- 8) aventuriers ayant un contrat en cours
+
+-- 9) quetes sans aucun contrat
 
 -- ============================================================
--- Purges (suppression)
+-- Modifications (mise a jour)
 -- ============================================================
 
--- 15) suppression contrat double
+-- 10) correction d'une recompense
 
--- 16) suppression contrats inactifs
+-- 11) desactivation des contrats de quetes inactives
+
+-- ============================================================
+-- Purge (suppression)
+-- ============================================================
+
+-- 12) suppression des contrats d'aventuriers inactifs

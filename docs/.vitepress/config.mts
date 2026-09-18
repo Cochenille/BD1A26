@@ -93,12 +93,20 @@ export default withMermaid(
         {
           text: "Travaux pratiques",
           collapsed: true,
-          items: [],
+          items: [
+            { text: "TP2 — Requêtes SQL", link: "/travaux/tp2-sql" },
+            // { text: "TP3 — DDL avancé", link: "/travaux/tp3-ddl-avance" },
+          ],
         },
         {
           text: "Grilles d’évaluation",
           collapsed: true,
-          items: [],
+          items: [
+            { text: "Grille — TP2", link: "/grilles/grille-tp2" },
+            { text: "Grille — Examen 1", link: "/grilles/grille-examen1" },
+            // { text: "Grille — TP3", link: "/grilles/grille-tp3" },
+            // { text: "Grille — Examen 2", link: "/grilles/grille-examen2" },
+          ],
         },
       ],
 

@@ -10,11 +10,11 @@ aside: false
 | 2 | 3 sept. | Intro et modélisation (suite) | — |
 | 3 | 10 sept. | DDL | — |
 | 4 | 17 sept. | DDL (suite) | — |
-| 5 | 24 sept. | SQL début | <Badge type="warning" text="Remise" /> **Énoncé TP2** |
-| 6 | 1 oct. | SQL (suite) | — |
-| 7 | 8 oct. | Examen 1 | <Badge type="danger" text="Examen" /> **Examen #1** (modules 1–3) |
+| 5 | 24 sept. | SQL début | <Badge type="info" text="Énoncé" /> **Énoncé TP2** |
+| 6 | 1 oct. | SQL (suite) + révision d'examen | — |
+| 7 | 8 oct. | Examen 1 (papier), puis atelier TP2 | <Badge type="danger" text="Examen" /> **Examen #1** (modules 1–3) |
 | — | 15 oct. |  | <Badge type="info" text="Pause" /> **Semaine de lecture** |
-| 8 | 22 oct. | Expressions régulières | — |
+| 8 | 22 oct. | TP2 — partie B (supervisée), puis expressions régulières | <Badge type="warning" text="Remise" /> **TP2 partie A** · <Badge type="danger" text="Évaluation" /> **TP2 partie B** en classe |
 | 9 | 29 oct. | Jointures de table | — |
 | 10 | 5 nov. | Fonctions d'aggrégation et group by | <Badge type="warning" text="Remise" /> **Énoncé TP3** |
 | 11 | 12 nov. | Sous-requête corrélées | — |
