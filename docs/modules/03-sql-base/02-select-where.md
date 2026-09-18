@@ -10,8 +10,8 @@ Comprendre la requête de sélection :
 - utilité de la requête `select` et syntaxe de base
 - sélectionner des colonnes d’une table
 - ordonner les données retournées avec `order by`
-- utiliser des alias de table avec `as`
 - filtrer les données avec `where`
+- renommer des colonnes et des tables avec des alias (`as`)
 
 ## Base de données de test à importer
 
@@ -193,6 +193,87 @@ MariaDB n'a pas de vrai type booléen : <code>boolean</code> est un <code>tinyin
 La colonne s'affiche donc <strong>1</strong> ou <strong>0</strong>, et les trois écritures
 suivantes sont équivalentes :<br>
 <code>where actif = true</code>, <code>where actif = 1</code>, <code>where actif</code>.
+</div>
+
+---
+
+## Renommer avec des alias (`as`) {#alias}
+
+Un **alias** est un nom temporaire donné à une colonne ou à une table, le temps d'une requête.
+Il ne change rien dans la base de données : seul l'affichage du résultat (ou l'écriture de la
+requête) est modifié.
+
+### Alias de colonne
+
+On met `as` après la colonne, puis le nom souhaité :
+
+```sql
+select nom as titre_evenement, capacite as places
+from evenement;
+```
+> Les colonnes s'afficheront sous les noms `titre_evenement` et `places`.
+
+Le mot `as` est **facultatif**, mais le garder rend la requête plus claire :
+
+```sql
+select nom titre_evenement
+from evenement;
+```
+
+Si l'alias contient un espace, un accent ou une majuscule à conserver, il faut l'entourer
+d'accents graves :
+
+```sql
+select nom as `Nom de l'événement`
+from evenement;
+```
+
+<div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
+<strong>Piège — l'alias n'existe pas encore dans le <code>where</code></strong><br>
+Le <code>where</code> est évalué <strong>avant</strong> le <code>select</code> : un alias de
+colonne n'y est donc pas reconnu.<br>
+<code>where places > 50</code> → erreur <em>Unknown column 'places'</em>.<br>
+Il faut écrire <code>where capacite > 50</code>. L'alias fonctionne par contre dans
+<code>order by</code>.
+</div>
+
+```sql
+select nom, capacite as places
+from evenement
+where capacite > 50
+order by places desc;
+```
+
+### Alias de table
+
+On met l'alias **après** le nom de la table, puis on peut préfixer les colonnes avec cet alias :
+
+```sql
+select e.nom, e.lieu, e.capacite
+from evenement as e
+where e.lieu = 'Paris';
+```
+
+Sur une seule table, l'alias n'est pas obligatoire. Il devient **essentiel** dès qu'une requête
+touche plusieurs tables — sous-requêtes, puis jointures au module 4 — parce que deux tables
+peuvent avoir des colonnes du même nom (`nom`, `id`, `date_...`) : le préfixe lève l'ambiguïté.
+
+```sql
+select p.nom, p.courriel
+from participant as p
+where p.id in (
+  select i.participant_id
+  from inscription as i
+  where i.date_inscription > '2026-01-01'
+);
+```
+
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>Convention du cours</strong><br>
+Alias de table : <strong>court et parlant</strong>, souvent l'initiale de la table
+(<code>evenement e</code>, <code>participant p</code>, <code>inscription i</code>).<br>
+Alias de colonne : à utiliser quand le nom retourné serait <strong>ambigu ou peu lisible</strong>
+(colonne partagée entre deux tables, résultat d'une fonction, etc.).
 </div>
 
 ---

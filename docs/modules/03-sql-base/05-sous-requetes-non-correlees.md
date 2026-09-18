@@ -202,5 +202,6 @@ Ce que ça fait : Événements dont le prix est supérieur à tous les événeme
 - Sous-requête non corrélée : s'exécute indépendamment
 - `in` : appartenance à un ensemble
 - `any` / `all` : comparaisons avec sous-ensembles
-- Utiliser des alias pour clarifier
+- Utiliser des [alias de tables](./02-select-where#alias) (`p`, `i`, `e`) pour clarifier quelle
+  table appartient à quel niveau de la requête
 - Préférer les jointures si possible pour les performances
