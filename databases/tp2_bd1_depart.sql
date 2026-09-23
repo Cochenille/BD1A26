@@ -9,14 +9,17 @@
 use guilde_aventuriers;
 
 -- ============================================================
--- Insertion des donnees (minimum 30 lignes par table)
+-- Insertion des donnees (minimum 25 lignes par table)
+-- La table lieu est deja remplie : rien a y inserer.
 -- ============================================================
 
 -- I1) Insertion des quetes
 
 -- I2) Insertion des aventuriers
 
--- I3) Insertion des contrats
+-- I3) Insertion de l'equipement
+
+-- I4) Insertion des contrats
 
 -- ============================================================
 -- Requetes de selection
@@ -24,15 +27,15 @@ use guilde_aventuriers;
 
 -- 1) quetes actives non expirees
 
--- 2) lieux distincts
+-- 2) aventuriers actifs
 
--- 3) aventuriers actifs
+-- 3) classes et plage de niveaux
 
--- 4) classes et plage de niveaux
+-- 4) aventuriers par debut de nom
 
--- 5) aventuriers par debut de nom
+-- 5) contrats en cours sur une periode
 
--- 6) contrats en cours sur une periode
+-- 6) equipement au-dessus d'un seuil
 
 -- ============================================================
 -- Sous-requetes
@@ -40,20 +43,26 @@ use guilde_aventuriers;
 
 -- 7) quetes faciles mieux payees qu'une quete perilleuse
 
--- 8) aventuriers ayant un contrat en cours
+-- 8) quetes dans un lieu dangereux
 
--- 9) quetes sans aucun contrat
+-- 9) aventuriers possedant un equipement de valeur
+
+-- 10) aventuriers ayant un contrat dans une region
+
+-- 11) quetes sans aucun contrat
+
+-- 12) lieux ou une quete est affichee
 
 -- ============================================================
 -- Modifications (mise a jour)
 -- ============================================================
 
--- 10) correction d'une recompense
+-- 13) correction d'une recompense
 
--- 11) desactivation des contrats de quetes inactives
+-- 14) desactivation des contrats de quetes inactives
 
 -- ============================================================
 -- Purge (suppression)
 -- ============================================================
 
--- 12) suppression des contrats d'aventuriers inactifs
+-- 15) suppression de l'equipement des aventuriers inactifs

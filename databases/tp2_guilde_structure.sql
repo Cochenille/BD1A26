@@ -16,6 +16,32 @@ create database guilde_aventuriers character set utf8mb4;
 use guilde_aventuriers;
 
 -- ------------------------------------------------------------
+-- Les lieux du royaume
+-- Table de reference : elle est deja remplie, vous n'avez pas
+-- a y inserer de donnees.
+-- ------------------------------------------------------------
+
+create table lieu (
+  id int primary key auto_increment,
+  nom varchar(80) not null unique,
+  region varchar(60) not null,
+  niveau_danger int not null check (niveau_danger between 1 and 5),
+  actif boolean not null default true
+);
+
+insert into lieu (id, nom, region, niveau_danger, actif) values
+  (1,  'Val-Doré',        'Vallée d''Or',     1, true),
+  (2,  'Corvebois',       'Vallée d''Or',     1, true),
+  (3,  'Lac Miroir',      'Vallée d''Or',     3, true),
+  (4,  'Bois de Fresnes', 'Marches du Nord',  2, true),
+  (5,  'Mont Brisé',      'Marches du Nord',  4, true),
+  (6,  'Col des Aigles',  'Marches du Nord',  5, true),
+  (7,  'Port-Grismer',    'Côte Salée',       2, true),
+  (8,  'Marais Blafard',  'Côte Salée',       4, false),
+  (9,  'Plaines du Sud',  'Terres Basses',    3, true),
+  (10, 'Désert d''Ombre', 'Terres Basses',    5, true);
+
+-- ------------------------------------------------------------
 -- Les quetes affichees dans le royaume
 -- ------------------------------------------------------------
 
@@ -23,11 +49,13 @@ create table quete (
   id int primary key auto_increment,
   titre varchar(150) not null,
   description text not null,
-  lieu varchar(80) not null,
+  lieu_id int not null,
   date_expiration date not null,
   difficulte enum('facile', 'modérée', 'périlleuse') not null,
   recompense_or int not null check (recompense_or >= 0),
-  actif boolean not null default true
+  actif boolean not null default true,
+
+  foreign key (lieu_id) references lieu(id)
 );
 
 -- ------------------------------------------------------------
@@ -41,6 +69,21 @@ create table aventurier (
   classe enum('guerrier', 'mage', 'assassin', 'druide', 'paladin', 'barde') not null,
   niveau int not null check (niveau between 1 and 20),
   actif boolean not null default true
+);
+
+-- ------------------------------------------------------------
+-- L'equipement possede par les aventuriers
+-- ------------------------------------------------------------
+
+create table equipement (
+  id int primary key auto_increment,
+  nom varchar(100) not null,
+  categorie enum('arme', 'armure', 'potion', 'grimoire', 'relique') not null,
+  valeur_or int not null check (valeur_or >= 0),
+  aventurier_id int not null,
+  actif boolean not null default true,
+
+  foreign key (aventurier_id) references aventurier(id)
 );
 
 -- ------------------------------------------------------------
