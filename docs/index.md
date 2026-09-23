@@ -40,9 +40,8 @@ hero:
         links: [
           { text: 'Laboratoire 4', href: '/labs/lab04-select', variant: 'primary' }
         ]
-      }
-      /* À décommenter en même temps que le TP2 dans config.mts :
-      ,{
+      },
+      {
         title: 'Commencer l’énoncé du TP2',
         description: 'Créer la base de la Guilde et commencer les insertions. Les requêtes deviendront toutes faisables après le cours de la semaine prochaine.',
         badge: 'Partie A — remise le 22 octobre',
@@ -51,7 +50,6 @@ hero:
           { text: 'Grille d’évaluation', href: '/grilles/grille-tp2', variant: 'secondary' }
         ]
       }
-      */
     ]"
   />
 </div>
