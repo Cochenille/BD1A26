@@ -8,7 +8,7 @@ Le TP2 vaut **13 %** de la note finale, répartis en deux parties :
 
 | Partie | Description | Poids |
 |---|---|---|
-| **A** | Travail à la maison — insertions et 12 requêtes | 6 % |
+| **A** | Travail à la maison — insertions et 15 requêtes | 6 % |
 | **B** | Évaluation supervisée en classe, sur une base fournie | 7 % |
 
 Chaque critère est évalué selon des niveaux de performance. Les pondérations indiquent le poids
@@ -22,13 +22,13 @@ de chaque critère dans la note de la partie concernée.
 
 | Niveau | Description | Note |
 |---|---|---|
-**Excellent** | Insertions pleinement fonctionnelles. 30 à 60 lignes par table. Contraintes respectées. Données variées, cohérentes et plausibles, permettant à toutes les requêtes de retourner des résultats significatifs. | 100 % |
+**Excellent** | Insertions pleinement fonctionnelles. 25 à 60 lignes dans chacune des quatre tables à remplir. Contraintes respectées. Données variées, cohérentes et plausibles, permettant à toutes les requêtes de retourner des résultats significatifs. | 100 % |
 **Suffisant** | Insertions fonctionnelles, mais quelques éléments mineurs à ajuster (variété, cohérence ou respect de certaines contraintes). | 60 % |
 **Absent ou insuffisant** | Insertions non fonctionnelles ou plusieurs éléments importants à corriger (quantité, cohérence ou contraintes). | 0 % |
 
 ---
 
-## 2) Requêtes de sélection et sous-requêtes (Q1 à Q9) — 50 %*
+## 2) Requêtes de sélection et sous-requêtes (Q1 à Q12) — 50 %*
 
 | Niveau | Description | Note |
 |---|---|---|
@@ -40,7 +40,7 @@ de chaque critère dans la note de la partie concernée.
 
 ---
 
-## 3) Modifications et suppression (Q10 à Q12) — 30 %*
+## 3) Modifications et suppression (Q13 à Q15) — 30 %*
 
 | Niveau | Description | Note |
 |---|---|---|

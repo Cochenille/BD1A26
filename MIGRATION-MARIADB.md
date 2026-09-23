@@ -459,6 +459,14 @@ refait en deux parties, dont une évaluée en classe sous surveillance.
   `docs/public/databases/tp2_guilde_structure.sql` (sans `drop database`, pour qu'un étudiant ne
   détruise pas ses insertions en réexécutant le script).
 - `palladin` corrigé en `paladin` dans l'enum des classes.
+- **Schéma enrichi à 5 tables** (2026-09-23) : le modèle à 3 tables ne permettait que des
+  sous-requêtes à un niveau. Ajout de `lieu` (table de référence **livrée pré-remplie**,
+  `quete.lieu` devient `quete.lieu_id`) et de `equipement` (1-N depuis `aventurier`).
+  La chaîne aventurier → contrat → quête → lieu donne enfin des sous-requêtes à trois niveaux,
+  comme l'exemple guidé du module 3. Contrepartie assumée : le **nom** du lieu ne peut plus être
+  affiché dans la liste des quêtes — ça demanderait une jointure — donc la colonne `lieu` a été
+  retirée des questions d'affichage. 15 questions au lieu de 12, 25 lignes par table au lieu
+  de 30.
 - Structure : **partie A** à la maison (6 %) — 30 à 60 lignes par table au lieu de 50 à 100, et
   12 requêtes au lieu de 16, pour laisser le temps des labos; **partie B** en classe, supervisée
   (7 %). Le fichier de départ et la grille suivent la nouvelle numérotation.

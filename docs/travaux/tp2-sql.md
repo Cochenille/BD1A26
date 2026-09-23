@@ -29,8 +29,8 @@ départ suivant. Renommez-le <code>tp2_prenom_nom.sql</code>.<br>
 La Grande Guilde des Aventuriers modernise ses registres.
 Les anciens parchemins sont remplacés par une application interne permettant de gérer :
 
-- les quêtes affichées dans le royaume ;
-- les aventuriers inscrits à la Guilde ;
+- les quêtes affichées dans le royaume, et les lieux où elles se déroulent ;
+- les aventuriers inscrits à la Guilde, et l'équipement qu'ils possèdent ;
 - les contrats signés entre aventuriers et quêtes.
 
 La structure de la base de données a déjà été conçue par les architectes du Royaume.
@@ -66,11 +66,18 @@ puissiez le consulter en écrivant vos requêtes.
 
 ## A1. Insertion des données
 
-Insérez un minimum de **30 lignes par table** (maximum 60) :
+Insérez un minimum de **25 lignes par table** (maximum 60) dans :
 
 - `quete`
 - `aventurier`
+- `equipement`
 - `contrat`
+
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>La table <code>lieu</code> est déjà remplie</strong><br>
+C'est une table de <strong>référence</strong> : ses dix lieux sont livrés avec la structure.
+Vous n'y insérez rien — vous vous en servez pour remplir le <code>lieu_id</code> de vos quêtes.
+</div>
 
 Les données doivent être :
 
@@ -81,8 +88,8 @@ Les données doivent être :
 
 Évitez les données répétitives ou artificielles (mêmes dates, mêmes récompenses, mêmes niveaux).
 Prévoyez des quêtes actives **et** inactives, des dates d'expiration passées **et** futures, des
-aventuriers actifs **et** inactifs : sans cette variété, plusieurs requêtes plus bas ne
-retourneront rien.
+aventuriers actifs **et** inactifs, et des quêtes réparties sur **plusieurs lieux** : sans cette
+variété, plusieurs requêtes plus bas ne retourneront rien.
 
 Contraintes :
 
@@ -110,52 +117,59 @@ Vous demeurez responsable du code remis.
 
 Elles doivent fonctionner avec **vos propres données** et retourner des résultats significatifs.
 Au besoin, ajoutez des données dans votre script d'insertion initial. Dans plusieurs cas, vous
-choisissez vous-même les valeurs des filtres (dates, plages, lettres).
+choisissez vous-même les valeurs des filtres (dates, plages, lettres, seuils).
 
 <div class="eval">
      Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
 </div>
 
 1. Afficher les quêtes **actives** dont la date d'expiration est aujourd'hui ou ultérieure, en
-   retournant uniquement : **titre**, **lieu**, **date d'expiration**, **difficulté**,
-   **récompense**. Présenter les résultats de la date d'expiration la plus proche à la plus
-   lointaine.
+   retournant uniquement : **titre**, **date d'expiration**, **difficulté**, **récompense**.
+   Présenter les résultats de la date d'expiration la plus proche à la plus lointaine.
 
 <div class="eval">
      Utiliser des jointures et des alias de table dans la réponse. Ne pas expliquer, donner le code seulement.
 </div>
 
-2. Afficher la liste des **lieux distincts** où des quêtes sont affichées, triée alphabétiquement.
+2. Afficher les aventuriers **actifs** en retournant : **nom**, **classe**, **niveau**,
+   **courriel**, triés du plus haut niveau au plus bas. Les aventuriers d'un même niveau doivent
+   être affichés en ordre alphabétique.
 
 <div class="eval">
      Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
 </div>
 
-3. Afficher les aventuriers **actifs** en retournant : **nom**, **classe**, **niveau**,
-   **courriel**, triés du plus haut niveau au plus bas. Les aventuriers d'un même niveau doivent
-   être affichés en ordre alphabétique.
+3. Afficher les aventuriers appartenant à une liste de classes choisie
+   (ex. : guerrier, mage ou druide) **et** dont le niveau se situe dans une plage choisie.
 
 <div class="eval">
      La réponse attendue contient une jointure et des alias de table. Donner uniquement le code SQL.
 </div>
 
-4. Afficher les aventuriers appartenant à une liste de classes choisie
-   (ex. : guerrier, mage ou druide) **et** dont le niveau se situe dans une plage choisie.
+4. Afficher les aventuriers dont le nom commence par une lettre choisie.
 
 <div class="eval">
      Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
 </div>
 
-5. Afficher les aventuriers dont le nom commence par une lettre choisie.
+5. Afficher les contrats **en cours** signés dans une période choisie, triés par date de
+   signature croissante.
 
 <div class="eval">
      Utiliser des jointures et des alias de table dans la réponse. Ne pas expliquer, donner le code seulement.
 </div>
 
-6. Afficher les contrats **en cours** signés dans une période choisie, triés par date de
-   signature croissante.
+6. Afficher l'équipement dont la valeur dépasse un seuil choisi, en retournant : **nom**,
+   **catégorie**, **valeur**, de la plus grande valeur à la plus petite.
 
 ## A3. Sous-requêtes
+
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>Rappel — une seule table à l'affichage</strong><br>
+Les jointures ne sont pas encore vues. Chaque requête de cette section affiche donc les colonnes
+d'<strong>une seule table</strong> et va chercher ses critères dans les autres au moyen de
+sous-requêtes. Construisez-les en partant de la table la plus éloignée et en remontant.
+</div>
 
 <div class="eval">
      Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
@@ -168,14 +182,33 @@ choisissez vous-même les valeurs des filtres (dates, plages, lettres).
      La réponse attendue contient une jointure et des alias de table. Donner uniquement le code SQL.
 </div>
 
-8. Afficher les aventuriers ayant **au moins un** contrat dont le statut est `en_cours`,
-   sans doublons.
+8. Afficher les quêtes situées dans un lieu dont le **niveau de danger est d'au moins 4**.
 
 <div class="eval">
      Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
 </div>
 
-9. Afficher les quêtes qui **n'ont reçu aucun contrat**.
+9. Afficher les aventuriers possédant **au moins une** pièce d'équipement valant plus qu'un
+   seuil choisi, sans doublons.
+
+<div class="eval">
+     Utiliser des jointures et des alias de table dans la réponse. Ne pas expliquer, donner le code seulement.
+</div>
+
+10. Afficher les aventuriers ayant signé **au moins un contrat** pour une quête située dans une
+    **région** choisie (ex. : les Marches du Nord), sans doublons.
+
+<div class="eval">
+     La réponse attendue contient une jointure et des alias de table. Donner uniquement le code SQL.
+</div>
+
+11. Afficher les quêtes qui **n'ont reçu aucun contrat**.
+
+<div class="eval">
+     Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
+</div>
+
+12. Afficher les lieux où **au moins une quête** est affichée, triés alphabétiquement.
 
 ## A4. Corrections du scribe (modification)
 
@@ -186,14 +219,14 @@ cible est bien celle attendue, afin de ne pas altérer tout le parchemin.
      Utiliser des jointures et des alias de table dans la réponse. Ne pas expliquer, donner le code seulement.
 </div>
 
-10. Une quête contient une récompense incorrecte. Modifier la récompense d'une quête précise,
+13. Une quête contient une récompense incorrecte. Modifier la récompense d'une quête précise,
     identifiée par son titre. **Une seule ligne** doit être affectée.
 
 <div class="eval">
      Produire du code SQL avec alias et jointures qui accompli la demande. Donner juste le code.
 </div>
 
-11. La Guilde décide de désactiver tous les contrats liés à des quêtes qui ne sont plus actives.
+14. La Guilde décide de désactiver tous les contrats liés à des quêtes qui ne sont plus actives.
     Mettre à jour les contrats concernés sans modifier les autres.
 
 ## A5. Purge aux oubliettes (suppression)
@@ -204,9 +237,9 @@ Mise en garde : ce qui part aux oubliettes ne revient pas. Agir avec méthode.
      La réponse attendue contient une jointure et des alias de table. Donner uniquement le code SQL.
 </div>
 
-12. La Guilde souhaite nettoyer le registre en supprimant tous les contrats associés à des
-    aventuriers qui ne sont plus actifs. Supprimer uniquement les contrats concernés, sans
-    supprimer les aventuriers eux-mêmes.
+15. La Guilde récupère le matériel des membres qui ont quitté : supprimer tout l'équipement
+    appartenant à des aventuriers qui ne sont plus actifs, sans supprimer les aventuriers
+    eux-mêmes.
 
 <div class="my-6 rounded-lg border border-red-300 bg-red-50 p-4 text-red-900">
 <strong>Le réflexe à prendre</strong><br>
@@ -233,8 +266,7 @@ préparer, rien à importer et rien à apporter : tout le matériel est fourni s
 <div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
 <strong>Comment s'y préparer</strong><br>
 Il n'y a rien à mémoriser de particulier : faire la partie A soi-même <em>est</em> la
-préparation. Un étudiant qui a écrit ses douze requêtes lui-même fait la partie B sans
-difficulté.
+préparation. Si tu écris tes quinze requêtes toi-même, tu n'auras pas de problème à faire la partie B.
 </div>
 
 ---
@@ -249,15 +281,26 @@ Ce code est celui du fichier
 create database guilde_aventuriers character set utf8mb4;
 use guilde_aventuriers;
 
+create table lieu (
+  id int primary key auto_increment,
+  nom varchar(80) not null unique,
+  region varchar(60) not null,
+  niveau_danger int not null check (niveau_danger between 1 and 5),
+  actif boolean not null default true
+);
+-- Cette table est livrée déjà remplie (10 lieux).
+
 create table quete (
   id int primary key auto_increment,
   titre varchar(150) not null,
   description text not null,
-  lieu varchar(80) not null,
+  lieu_id int not null,
   date_expiration date not null,
   difficulte enum('facile', 'modérée', 'périlleuse') not null,
   recompense_or int not null check (recompense_or >= 0),
-  actif boolean not null default true
+  actif boolean not null default true,
+
+  foreign key (lieu_id) references lieu(id)
 );
 
 create table aventurier (
@@ -267,6 +310,17 @@ create table aventurier (
   classe enum('guerrier', 'mage', 'assassin', 'druide', 'paladin', 'barde') not null,
   niveau int not null check (niveau between 1 and 20),
   actif boolean not null default true
+);
+
+create table equipement (
+  id int primary key auto_increment,
+  nom varchar(100) not null,
+  categorie enum('arme', 'armure', 'potion', 'grimoire', 'relique') not null,
+  valeur_or int not null check (valeur_or >= 0),
+  aventurier_id int not null,
+  actif boolean not null default true,
+
+  foreign key (aventurier_id) references aventurier(id)
 );
 
 create table contrat (
@@ -289,6 +343,8 @@ create table contrat (
 <strong>À remarquer dans cette structure</strong><br>
 Les <code>enum</code> sont déclarés <strong>dans la colonne</strong> : en MariaDB, il n'existe pas
 de <code>create type</code>.<br>
+Le lieu d'une quête est une <strong>référence</strong> (<code>lieu_id</code>), pas un texte
+recopié dans chaque quête. C'est ce qui permet de corriger le nom d'un lieu à un seul endroit.<br>
 La contrainte <code>unique (quete_id, aventurier_id)</code> empêche un même aventurier de signer
 deux fois la même quête — pensez-y en générant vos contrats, sinon vos insertions échoueront.
 </div>
