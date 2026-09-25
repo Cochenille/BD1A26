@@ -25,7 +25,7 @@ savez pas si la syntaxe vient de vous ou de l'outil.
 
 | Partie | Matière | Type de questions |
 |---|---|---|
-| 1 | Modélisation (module 1) | lire un MRD, cardinalités, PK et FK, construire un modèle à partir de règles d'affaires |
+| 1 | Modélisation (module 1) | lire un MRD, cardinalités, PK et FK, interpréter un modèle |
 | 2 | DDL (module 2) | `create table`, types, contraintes, corriger un script fautif |
 | 3 | SQL (module 3) | `insert`, `select`, opérateurs, sous-requêtes, prédire le résultat d'une requête |
 
@@ -102,38 +102,11 @@ Répondez sans regarder vos notes :
 7. Un client peut-il acheter **deux billets** pour le même spectacle avec ce modèle ?
    Qu'est-ce qui l'empêcherait ou le permettrait ?
 
-## 2. Construire un modèle à partir de règles d'affaires
-
-La plateforme veut maintenant gérer les **salles** où sont présentés les spectacles.
-
-Règles d'affaires :
-
-- Une salle possède un nom, une adresse et un nombre de places.
-- Un spectacle est présenté dans **une seule** salle.
-- Une salle peut accueillir **plusieurs** spectacles.
-- Une salle appartient à un **diffuseur**; un diffuseur peut posséder plusieurs salles.
-
-Sur papier :
-
-1. Ajoutez les tables nécessaires au modèle de la question 1.
-2. Donnez les colonnes et leur **type**, en respectant les conventions du cours
-   (minuscules, sans accents, singulier, `snake_case`).
-3. Indiquez les PK, les FK et les cardinalités.
-4. Dans quelle table la FK doit-elle être placée pour la relation salle–spectacle ?
-   Pourquoi pas dans l'autre ?
-
-<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
-<strong>Le réflexe à avoir</strong><br>
-Dans une relation 1–N, la clé étrangère va <strong>toujours du côté N</strong>.
-Plusieurs spectacles dans une salle → la FK <code>salle_id</code> va dans
-<code>spectacle</code>.
-</div>
-
 ---
 
 # PARTIE 2 — DDL
 
-## 3. Corriger un script
+## 2. Corriger un script
 
 Le script suivant devait créer la base de la billetterie. Il ne s'exécute pas.
 
@@ -214,9 +187,9 @@ create table billet (
 
 </details>
 
-## 4. Écrire un `create table` complet
+## 3. Écrire un `create table` complet
 
-Sans regarder le corrigé de la question 3, écrivez **à la main** la table `carte_credit` :
+Sans regarder le corrigé de la question 2, écrivez **à la main** la table `carte_credit` :
 
 - une clé primaire auto-incrémentée;
 - le numéro de la carte, sa date d'expiration, son code de vérification;
@@ -234,7 +207,7 @@ Questions à vous poser en écrivant :
 
 # PARTIE 3 — SQL
 
-## 5. Prédire le résultat d'une requête
+## 4. Prédire le résultat d'une requête
 
 C'est le type de question qu'on ne peut pas pratiquer en tapant du code : il faut **lire** et
 **raisonner**.
@@ -328,7 +301,7 @@ La collation est aussi **insensible à la casse et aux accents** pour l'opérate
 
 </details>
 
-## 6. Écrire des requêtes
+## 5. Écrire des requêtes
 
 Reprenez le modèle de la partie 1 et écrivez les requêtes suivantes **à la main**.
 

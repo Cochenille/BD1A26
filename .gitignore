@@ -84,3 +84,6 @@ typings/
 .dynamodb/ 
 
 /package-lock.json
+
+# Examens et corrigés (confidentiels, jamais publiés)
+/examens/

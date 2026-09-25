@@ -39,7 +39,7 @@ sur la **syntaxe enseignée**, avec la distinction suivante :
 
 ## Partie 1 — Modélisation (30 pts)
 
-### Q1 — Repérer les clés d'un modèle (6 pts)
+### Q1 — Repérer les clés d'un modèle (8 pts)
 
 | Niveau | Description |
 |---|---|
@@ -50,7 +50,7 @@ sur la **syntaxe enseignée**, avec la distinction suivante :
 
 ---
 
-### Q2 — Déterminer et justifier les cardinalités (8 pts)
+### Q2 — Déterminer et justifier les cardinalités (12 pts)
 
 | Niveau | Description |
 |---|---|
@@ -61,7 +61,7 @@ sur la **syntaxe enseignée**, avec la distinction suivante :
 
 ---
 
-### Q3 — Interpréter le modèle (6 pts)
+### Q3 — Interpréter le modèle (10 pts)
 
 | Niveau | Description |
 |---|---|
@@ -72,46 +72,27 @@ sur la **syntaxe enseignée**, avec la distinction suivante :
 
 ---
 
-### Q4 — Construire un modèle à partir de règles d'affaires (10 pts)
-
-| Niveau | Description |
-|---|---|
-| Excellent | Toutes les tables nécessaires sont présentes, avec des colonnes et des types appropriés. PK, FK et cardinalités indiquées. La FK est placée du bon côté de la relation 1–N. Conventions de nommage respectées (minuscules, sans accents, singulier, `snake_case`). |
-| Suffisant | Modèle fonctionnel, mais un type mal choisi, une FK placée du mauvais côté, ou des conventions de nommage non respectées. |
-| Insuffisant | Une table manquante, ou les relations entre les tables ne sont pas exprimées par des clés. |
-| Incorrect | Modèle absent ou sans rapport avec les règles d'affaires. |
-
----
-
 ## Partie 2 — DDL (30 pts)
 
-### Q5 — Identifier les erreurs d'un script (10 pts)
+### Q4 — Identifier et corriger les erreurs d'un script (14 pts)
+
+Pour chaque erreur, l'étudiant indique la ligne, explique pourquoi c'est une erreur et écrit
+la correction.
 
 | Niveau | Description |
 |---|---|
-| Excellent | Toutes les erreurs sont relevées et chacune est **expliquée** (pourquoi le script échoue à cet endroit). |
-| Suffisant | La majorité des erreurs est relevée; une ou deux omissions, ou des explications superficielles. |
-| Insuffisant | Moins de la moitié des erreurs relevée, ou erreurs relevées sans explication. |
+| Excellent | Au moins huit erreurs sont relevées; chacune est **expliquée** (pourquoi le script échoue ou pourquoi le choix est mauvais) et accompagnée d'une **correction** valide en MariaDB (`use` ajouté, ordre de création, type de FK identique à la PK, `enum` dans la colonne, `auto_increment` sur une clé…). |
+| Suffisant | Six ou sept erreurs relevées et corrigées, ou huit relevées mais avec des explications superficielles ou des corrections absentes ou inexactes. |
+| Insuffisant | Cinq erreurs ou moins, ou erreurs relevées sans explication ni correction. |
 | Incorrect | Les erreurs ne sont pas identifiées. |
 
 ---
 
-### Q6 — Réécrire le script corrigé (8 pts)
+### Q5 — Écrire un `create table` complet (16 pts)
 
 | Niveau | Description |
 |---|---|
-| Excellent | Script complet et exécutable : `use` présent, tables créées dans le bon ordre, types de FK identiques aux PK référencées, `enum` déclaré dans la colonne, `auto_increment` sur une clé. |
-| Suffisant | Script globalement correct, mais un élément manque (le `use`, une contrainte, l'ordre de création). |
-| Insuffisant | Plusieurs erreurs relevées en Q5 subsistent dans la réécriture. |
-| Incorrect | Script non réécrit ou toujours non fonctionnel dans son ensemble. |
-
----
-
-### Q7 — Écrire un `create table` complet (12 pts)
-
-| Niveau | Description |
-|---|---|
-| Excellent | Clé primaire auto-incrémentée. Types appropriés à la nature de chaque donnée. Contraintes pertinentes (`not null`, `unique`, `check`, valeur par défaut). Clé étrangère correctement déclarée et du bon type. |
+| Excellent | Clé primaire auto-incrémentée. Types appropriés à la nature de chaque donnée. Contraintes pertinentes (`not null`, `unique`, `check`, valeur par défaut), y compris un `unique` sur une paire de colonnes lorsque la règle porte sur une combinaison. Clé étrangère correctement déclarée et du bon type. |
 | Suffisant | Table fonctionnelle, mais un type discutable ou une contrainte pertinente omise. |
 | Insuffisant | Table créée, mais clé primaire ou clé étrangère absente ou mal déclarée. |
 | Incorrect | Instruction non fonctionnelle ou absente. |
@@ -127,7 +108,7 @@ chaîne, pas un entier — c'est ce raisonnement qui est évalué, et il doit po
 
 ## Partie 3 — SQL (40 pts)
 
-### Q8 — Insertion (6 pts)
+### Q6 — Insertion (6 pts)
 
 | Niveau | Description |
 |---|---|
@@ -138,7 +119,7 @@ chaîne, pas un entier — c'est ce raisonnement qui est évalué, et il doit po
 
 ---
 
-### Q9 — Prédire le résultat de requêtes (8 pts)
+### Q7 — Prédire le résultat de requêtes (8 pts)
 
 | Niveau | Description |
 |---|---|
@@ -149,7 +130,7 @@ chaîne, pas un entier — c'est ce raisonnement qui est évalué, et il doit po
 
 ---
 
-### Q10 — Sélection et filtres (10 pts)
+### Q8 — Sélection et filtres (10 pts)
 
 | Niveau | Description |
 |---|---|
@@ -160,7 +141,7 @@ chaîne, pas un entier — c'est ce raisonnement qui est évalué, et il doit po
 
 ---
 
-### Q11 — Sous-requête non corrélée (8 pts)
+### Q9 — Sous-requête non corrélée (8 pts)
 
 | Niveau | Description |
 |---|---|
@@ -171,7 +152,7 @@ chaîne, pas un entier — c'est ce raisonnement qui est évalué, et il doit po
 
 ---
 
-### Q12 — Mise à jour et suppression ciblées (8 pts)
+### Q10 — Mise à jour et suppression ciblées (8 pts)
 
 | Niveau | Description |
 |---|---|
