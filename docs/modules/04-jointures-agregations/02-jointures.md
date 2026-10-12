@@ -10,7 +10,7 @@ Comprendre comment **combiner des données provenant de plusieurs tables** :
 - `inner join` (lignes qui matchent des deux côtés)
 - `left join` (garder toutes les lignes de gauche)
 - `right join` (garder toutes les lignes de droite)
-- `full join` (garder tout des deux côtés)
+- `full join` (garder tout des deux côtés) — **n'existe pas en MariaDB**, on verra comment l'obtenir quand même
 
 Dans les exemples, on utilise maintenant des **alias de tables** (ex. `piste p`, `album al`) pour :
 - rendre les requêtes plus courtes et lisibles
@@ -32,12 +32,25 @@ Pour suivre les exemples de ce module, vous devez importer la base de données <
 
 ### Importation
 
-Téléchargez le fichier SQL, puis exécutez dans un invite de commandes :<br>
-<strong>Changez le chemin d'accès du fichier selon où vous l'avez placé.</strong>
+Téléchargez le fichier SQL, puis **ouvrez-le dans DBeaver** (`Fichier` → `Ouvrir un fichier…`,
+ou par glisser-déposer) et exécutez **tout le script** avec `Alt + X`.
 
-```bash
-psql -U postgres -f "C:\Users\Admin\Desktop\chinook.sql"
-```
+<div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
+<strong>Ce fichier est autoportant</strong><br>
+Il contient déjà le <code>create database</code> et le <code>use</code> : il crée la base
+<code>chinook</code> et la sélectionne. Le script compte plus de 15 000 lignes : laissez-le
+terminer avant de faire autre chose.<br>
+Rafraîchissez le navigateur de bases de données avec <code>F5</code> pour voir apparaître la
+base, puis commencez votre script par <code>use chinook;</code>.<br>
+Marche à suivre détaillée : <a href="./../02-ddl-base/07-import-export">Import et export d'une
+base de données</a>.
+</div>
+
+<div class="my-6 rounded-lg border border-red-300 bg-red-50 p-4 text-red-900">
+<strong>⚠️ Le script commence par <code>drop database if exists chinook;</code></strong><br>
+Si vous réimportez Chinook, tout ce que vous avez modifié dans cette base est effacé. C'est
+voulu : on repart toujours de la même base de départ.
+</div>
 
 ### À propos de Chinook
 
@@ -225,24 +238,68 @@ En pratique, évitez <code>right join</code> : réécrivez la requête avec un <
 
 ## Full join
 
-Un `full join` retourne :
+Un `full join` (ou `full outer join`) retourne :
 - toutes les lignes de gauche
 - toutes les lignes de droite
 - avec des `NULL` quand il n’y a pas de correspondance
 
+<div class="my-3 rounded-lg border border-red-300 bg-red-50 p-3 text-red-900">
+<strong>⚠️ MariaDB ne supporte pas <code>full join</code></strong><br>
+C'est une limite du SGBD : le <code>full join</code> fait partie de la norme SQL et existe dans
+PostgreSQL, SQL Server ou Oracle, mais pas dans MariaDB ni MySQL. La requête est refusée avec une
+erreur de syntaxe. On obtient quand même le résultat en combinant un <code>left join</code> et un
+<code>right join</code>.
+</div>
+
 ### Exemple — clients avec ou sans représentant, et représentants avec ou sans clients
 
-Ce `full join` permet de voir :
-- les clients qui n’ont pas de représentant (`employe` = `NULL`)
+On veut voir, dans un même résultat :
+- les clients qui n’ont pas de représentant (`représentant` = `NULL`)
 - les employés qui ne sont le représentant d’aucun client (`client` = `NULL`)
+
+Dans un SGBD qui le supporte, on écrirait :
+
+```sql
+-- ❌ Refusé par MariaDB
+select c.prenom client, r.prenom représentant
+from client c
+full join employe r
+	on c.representant_id = r.employe_id;
+```
+
+En MariaDB, on écrit les deux moitiés séparément, puis on les colle avec `union` :
 
 ```sql
 select c.prenom client, r.prenom représentant
 from client c
-full join employe r
+left join employe r
 	on c.representant_id = r.employe_id
-order by r.prenom, c.prenom;
+
+union
+
+select c.prenom client, r.prenom représentant
+from client c
+right join employe r
+	on c.representant_id = r.employe_id
+
+order by représentant, client;
 ```
+
+Comment ça fonctionne :
+- le `left join` donne **tous les clients**, avec ou sans représentant
+- le `right join` donne **tous les employés**, avec ou sans client
+- `union` superpose les deux résultats (les deux `select` doivent avoir les mêmes colonnes) et **élimine les doublons** : les clients qui ont un représentant apparaissent dans les deux moitiés, mais ne sont gardés qu'une fois
+- le `order by` final s'applique au résultat complet
+
+> Résultat : 64 lignes — les 59 clients, plus les 5 employés qui ne représentent aucun client.
+
+<div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
+<strong>Attention aux doublons légitimes</strong><br>
+Comme <code>union</code> élimine les lignes identiques, deux clients différents qui auraient le
+même prénom <em>et</em> le même représentant seraient fusionnés en une seule ligne. Pour éviter
+ce piège, ajoutez la clé primaire à chaque <code>select</code> (par exemple
+<code>c.client_id</code>) : deux lignes ne seront alors jamais identiques.
+</div>
 
 ---
 

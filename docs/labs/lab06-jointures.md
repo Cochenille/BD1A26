@@ -16,7 +16,11 @@ Si vous ne l'avez pas encore importée, référez-vous aux instructions du modul
 <a href="../modules/04-jointures-agregations/02-jointures#base-de-donnees-de-test-a-importer-chinook">Importer Chinook</a>
 </div>
 
-Créez un nouveau script SQL dans DBeaver (portée : base de données `chinook`).
+Créez un nouveau script SQL dans DBeaver et **commencez-le par son `use`** :
+
+```sql
+use chinook;
+```
 
 ---
 
@@ -51,11 +55,11 @@ Les requêtes suivantes utilisent une sous-requête. Pour chacune, réécrivez-l
 > select c.client_id, c.prenom, c.nom_famille 
 >from client c
 >where c.client_id in (
->	select c.client_id 
+>	select f.client_id 
 >	from facture f 
 >);
 > ```
-> Réécrivez avec un `join` pour afficher : le **prénom**, le **nom de famille** des clients, ainsi que le **numéro de facture (id_facture)** et la **date de facturation**. Triez par prénom de client et par date de facturation décroissante.
+> Réécrivez avec un `join` pour afficher : le **prénom**, le **nom de famille** des clients, ainsi que le **numéro de facture (`facture_id`)** et la **date de facturation**. Triez par prénom de client et par date de facturation décroissante.
 
 ---
 
@@ -102,12 +106,19 @@ order by r.prenom, c.prenom;
 
 ## 5 — Expressions régulières (rappel) avec jointures
 
-L'opérateur `~` permet de filtrer avec une **expression régulière** en PostgreSQL. Il s'utilise dans le `where`, comme `like`, mais avec la syntaxe regex.
+L'opérateur `regexp` permet de filtrer avec une **expression régulière** en MariaDB. Il s'utilise dans le `where`, comme `like`, mais avec la syntaxe regex.
 
 ```sql
 -- Exemple : pistes dont le nom commence par un chiffre
-select nom from piste where nom ~ '^[0-9]';
+select nom from piste where nom regexp '^[0-9]';
 ```
+
+<div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
+<strong>Rappels MariaDB</strong><br>
+- <code>regexp</code> ignore la casse : <code>[aeiou]</code> trouve aussi les majuscules.<br>
+- Un antislash doit être doublé dans le motif : <code>'\\d'</code>, <code>'\\.'</code>. Sinon, MariaDB le retire sans avertissement.<br>
+Détails : <a href="../modules/04-jointures-agregations/01-expressions-regulieres#utilisation-avec-mariadb">Utilisation avec MariaDB</a>
+</div>
 
 ### Requêtes à écrire
 

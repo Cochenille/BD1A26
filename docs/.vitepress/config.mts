@@ -23,6 +23,7 @@ export default withMermaid(
             { text: "Module 1 — Introduction", link: "/modules/01-introduction/" },
             { text: "Module 2 — DDL de base", link: "/modules/02-ddl-base/" },
             { text: "Module 3 — SQL", link: "/modules/03-sql-base/" },
+            { text: "Module 4 — Jointures et agrégations", link: "/modules/04-jointures-agregations/" },
           ],
         },
         { text: "Documentation MariaDB", link: "https://mariadb.com/docs" },
@@ -77,6 +78,17 @@ export default withMermaid(
                 { text: "Révision d'examen 1", link: "/modules/03-sql-base/06-examen-1" },
               ],
             },
+            {
+              text: "Module 4 — Jointures et agrégations",
+              collapsed: true,
+              items: [
+                { text: "Expressions régulières", link: "/modules/04-jointures-agregations/01-expressions-regulieres" },
+                { text: "Jointures", link: "/modules/04-jointures-agregations/02-jointures" },
+                { text: "Fonctions d'agrégation", link: "/modules/04-jointures-agregations/03-fonctions-agregation" },
+                { text: "Group by et having", link: "/modules/04-jointures-agregations/04-group-by-having" },
+                { text: "Sous-requêtes corrélées", link: "/modules/04-jointures-agregations/05-sous-requetes-correlees" },
+              ],
+            },
           ],
         },
         {
@@ -88,6 +100,8 @@ export default withMermaid(
             { text: "Lab 03 — DDL", link: "/labs/lab03-ddl" },
             { text: "Lab 04 — Requêtes select", link: "/labs/lab04-select" },
             { text: "Lab 05 — Modification, opérateurs et sous-requêtes", link: "/labs/lab05-avance" },
+            { text: "Lab 06 — Jointures", link: "/labs/lab06-jointures" },
+            { text: "Lab 07 — Agrégations", link: "/labs/lab07-agregations" },
           ],
         },
         {

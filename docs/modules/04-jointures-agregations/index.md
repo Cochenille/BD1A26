@@ -7,7 +7,7 @@ aside: false
 
 ## Objectifs du module
 - Appliquer les expressions régulières et fonctions textuelles pour filtrer les données.
-- Comprendre les différents types de jointures (`INNER`, `LEFT`, `RIGHT`, `FULL`) et leurs usages.
+- Comprendre les différents types de jointures (`INNER`, `LEFT`, `RIGHT`) et leurs usages, et obtenir l'équivalent d'un `FULL` en MariaDB.
 - Écrire des requêtes qui combinent plusieurs tables efficacement.
 - Utiliser les fonctions d'agrégation (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`) pour résumer des jeux de résultats.
 - Maîtriser `GROUP BY` et `HAVING` pour agréger et filtrer les groupes.

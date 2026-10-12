@@ -323,42 +323,76 @@ Objectif : construire une expression régulière qui **repère seulement ces car
 
 Consigne : testez cette regex dans l'onglet **Text** de regexr (et non dans l'onglet Tests). Vous devriez voir les parenthèses, les tirets et les espaces **surlignés** dans le texte.
 
-## Utilisation avec PostgreSQL
+## Utilisation avec MariaDB
 
-Dans PostgreSQL, les expressions régulières sont surtout utiles pour :
+Dans MariaDB, les expressions régulières sont surtout utiles pour :
 
-- **filtrer ou valider** des valeurs (`~`, `regexp_matches`)
+- **filtrer ou valider** des valeurs (`regexp`, `regexp_substr`)
 - **nettoyer ou transformer** des valeurs (`regexp_replace`)
 
-### L'opérateur `~` (tilde)
+MariaDB utilise la bibliothèque **PCRE**, la même famille de syntaxe que regexr : les
+métacaractères vus plus haut s'utilisent tels quels… à un détail près, l'antislash (voir
+l'encadré rouge plus bas).
 
-En PostgreSQL, `~` signifie **« la valeur correspond à cette expression régulière »**.
+### L'opérateur `regexp`
 
-- `colonne ~ 'motif'` : la valeur matche le motif regex.
-- `not (colonne ~ 'motif')` : la valeur ne matche pas.
-- Version insensible à la casse : `colonne ~* 'motif'`.
+En MariaDB, `regexp` signifie **« la valeur contient une correspondance avec cette expression régulière »**.
 
-Par rapport à `LIKE`, `~` permet d'exprimer des contraintes plus précises (longueur, classes de caractères, position dans la chaîne, etc.).
+- `colonne regexp 'motif'` : la valeur matche le motif regex.
+- `colonne not regexp 'motif'` : la valeur ne matche pas.
+- `rlike` est un synonyme de `regexp` : `colonne rlike 'motif'` fait exactement la même chose.
 
-:::tip Clavier — taper le caractère `~`
-Sur un clavier « Français (Canada) » sous Windows :
-- appuyez sur `AltGr` (celui de droite) + `;:` (à côté du L), pour insérer `~` ;
-- ou maintenez `Alt` (celui de gauche) enfoncé et tapez `126` sur le pavé numérique, puis relâchez `Alt` (`~` est le caractère ASCII 126).
-:::
+Par rapport à `like`, `regexp` permet d'exprimer des contraintes plus précises (longueur, classes de caractères, position dans la chaîne, etc.).
+
+<div class="my-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-yellow-900">
+<strong>⚠️ Comme <code>like</code>, <code>regexp</code> ignore la casse</strong><br>
+La collation par défaut de nos bases est insensible à la casse (<code>_ci</code>) : le motif
+<code>'^a'</code> retrouve aussi les valeurs qui commencent par <code>A</code>, et la classe
+<code>[A-Z]</code> accepte aussi les minuscules.<br><br>
+Pour forcer le respect de la casse, on place <code>(?-i)</code> au tout début du motif :<br>
+<code>where nom regexp '(?-i)^A'</code>
+</div>
+
+<div class="my-6 rounded-lg border border-red-300 bg-red-50 p-4 text-red-900">
+<strong>⚠️ En MariaDB, l'antislash doit être doublé</strong><br>
+Dans une chaîne de caractères MariaDB, <code>\</code> sert déjà à échapper des caractères
+(<code>\'</code>, <code>\n</code>…). MariaDB lit donc la chaîne <strong>avant</strong> de la
+passer au moteur regex, et il retire l'antislash des séquences qu'il ne reconnaît pas :
+<code>'\d'</code> devient <code>'d'</code>, et <code>'\.'</code> devient <code>'.'</code>
+(n'importe quel caractère !).<br><br>
+Il n'y a <strong>aucun message d'erreur</strong> : la requête s'exécute avec un autre motif que
+celui que vous pensiez écrire. Par exemple, <code>'123' regexp '^\d{3}$'</code> retourne
+<code>0</code>, alors que <code>'ddd' regexp '^\d{3}$'</code> retourne <code>1</code> !
+Il faut donc doubler chaque antislash :
+
+| Dans regexr | Dans MariaDB |
+|---|---|
+| `\d` | `'\\d'` |
+| `\s` | `'\\s'` |
+| `\w` | `'\\w'` |
+| `\.` | `'\\.'` |
+
+Autre option, sans antislash : les classes <code>[0-9]</code> au lieu de <code>\d</code>, ou
+<code>[.]</code> pour un point littéral.
+</div>
 
 ### Table d'exemple
 
->Remarquer l'utilisation d'expressions régulières avec `check` pour valider le courriel et le code postal. 
+>Remarquer l'utilisation d'expressions régulières avec `check` pour valider le courriel et le code postal.
 
 >Le numéro de téléphone est intentionnellement non normalisé ici. Nous allons le faire dans une démo plus bas avec un `insert`.
+
 ```sql
+create database module_04_regex character set utf8mb4;
+use module_04_regex;
+
 create table utilisateur (
-	id serial primary key,
+	id int primary key auto_increment,
 	nom varchar(100) not null,
-	courriel varchar(150) unique not null check (courriel ~ '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
+	courriel varchar(150) unique not null check (courriel regexp '^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$'),
 	telephone varchar(25) not null,
 	notes text,
-	code_postal varchar check (upper(code_postal) ~ '^[A-Z][0-9][A-Z][0-9][A-Z][0-9]$')
+	code_postal varchar(10) check (upper(code_postal) regexp '^[A-Z][0-9][A-Z][0-9][A-Z][0-9]$')
 );
 
 -- Insert non valide --> Que faut-il corriger?
@@ -377,68 +411,73 @@ insert into utilisateur (nom, courriel, telephone, notes, code_postal) values
 
 ### Filtrer / valider avec un motif
 
-- Extraire les tags dans la colonne `notes` avec `regexp_matches` :
+- Extraire le premier tag de la colonne `notes` avec `regexp_substr` :
 
 ```sql
-select id, regexp_matches(notes, '#(\w+)', 'g') as tag
+select id, regexp_substr(notes, '#\\w+') as tag
 from utilisateur;
 ```
+
+> `regexp_substr` retourne **la première** correspondance trouvée dans la chaîne (ou une chaîne vide s'il n'y en a pas). Pour Sophie, on obtient `#facture`, mais pas `#urgent`.
 
 - Rechercher les numéros de téléphone où **l'indicatif régional (3 chiffres)** est immédiatement suivi de `777` :
 
 ```sql
 select id, nom, telephone
 from utilisateur
-where telephone ~ '^(\d){3}777';
+where telephone regexp '^\\d{3}777';
 ```
 
 ### Nettoyer un numéro de téléphone avec `regexp_replace`
 
-- Conserver uniquement les chiffres lors d'un `INSERT` pour stocker seulement les chiffres dans un numéro de téléphone.
+- Conserver uniquement les chiffres lors d'un `insert` pour stocker seulement les chiffres dans un numéro de téléphone.
 
 ```sql
 insert into utilisateur (nom, courriel, telephone, notes, code_postal) values (
-	'Olivier', 
-	'olivier3@exemple.com', 
-	regexp_replace('(418) 888-7890', '[()\-\s]', '', 'g'), 
-	'#tag1 data', 
+	'Olivier',
+	'olivier3@exemple.com',
+	regexp_replace('(418) 888-7890', '[()\\-\\s]', ''),
+	'#tag1 data',
 	'G1K8P4'
 );
 ```
 
-:::tip Détail sur le paramètre `'g'`
-- Dans `regexp_matches(..., 'g')`, le `g` signifie **global** : on récupère **toutes** les occurrences qui correspondent au motif dans la chaîne, pas seulement la première.
-- Dans `regexp_replace(..., 'g')`, le `g` indique que le remplacement s'applique à **toutes** les correspondances dans la chaîne (et pas uniquement à la première).
+:::tip Toutes les occurrences sont remplacées
+En MariaDB, `regexp_replace(chaine, motif, remplacement)` remplace **toutes** les correspondances
+dans la chaîne, pas seulement la première. Ici, les parenthèses, le tiret et l'espace disparaissent
+tous : on stocke `4188887890`.
 :::
 
-> Pour d'autres usages avancés, voir la documentation PostgreSQL : https://www.postgresql.org/docs/current/functions-matching.html
+> Pour d'autres usages avancés, voir la documentation MariaDB : https://mariadb.com/docs/server/reference/sql-functions/string-functions/regular-expressions-functions
 
 
-## Exercices avec PostgreSQL
+## Exercices avec MariaDB
 
 On travaille ici sur des **produits alimentaires** stockés en base de données.
 
 ### Table de départ
 
 ```sql
+use module_04_regex;
+
 create table produits (
-	id serial primary key,
-	sku varchar(8) not null,      -- code article interne
+	id int primary key auto_increment,
+	sku varchar(8) not null,          -- code article interne
 	code_couleur varchar(7) not null, -- couleur en notation hexadécimale (#RRGGBB)
-	ingredients text              -- texte libre : ingrédients, additifs, etc.
+	ingredients text                  -- texte libre : ingrédients, additifs, etc.
 );
 ```
 
 ### 1. Deux contraintes `check` avec regex
 
-1. Ajoutez une contrainte `check` sur `sku` qui impose le format suivant :  
+1. Ajoutez une contrainte `check` sur `sku` qui impose le format suivant :
 	- 3 lettres majuscules, un tiret, 4 chiffres, par exemple `BOI-1234`.
 
-2. Ajoutez une contrainte `check` sur `code_couleur` qui impose un format de couleur hexadécimale simple :  
-	- un `#` suivi de exactement 6 caractères hexadécimaux (`0–9`, `A–F` ou `a–f`), 
+2. Ajoutez une contrainte `check` sur `code_couleur` qui impose un format de couleur hexadécimale simple :
+	- un `#` suivi de exactement 6 caractères hexadécimaux (`0–9`, `A–F` ou `a–f`),
 	- par exemple `#FF8800`.
 
-*Indication : utilisez l’opérateur `~` et ancrez bien vos motifs avec `^` et `$`.*
+*Indication : utilisez l’opérateur `regexp` et ancrez bien vos motifs avec `^` et `$`. Comme `regexp` ignore la casse, la contrainte sur `sku` laisserait passer `boi-1234` : commencez ce motif par `(?-i)` pour exiger les majuscules.*
 
 ### 2. `insert` avec nettoyage de caractères
 
@@ -448,28 +487,26 @@ Un fournisseur envoie des données un peu non normalisées pour le `sku` :
 - `Boi_1234`
 
 Nous cherchons à normaliser le sku au format `BOI-1234` avant de le stocker en base de données.
-Corrigez les insert suivants à l'aide de `upper(...)` et `regexp_replace` pour 
-- convertir le `sku` en majuscules 
-- supprimer les espaces inutiles et caractères de séparation (`_`, `/`, etc.) 
-- inséser au final un `sku` du type `BOI-1234`.
+Corrigez les insert suivants à l'aide de `upper(...)` et `regexp_replace` pour
+- convertir le `sku` en majuscules
+- supprimer les espaces inutiles et caractères de séparation (`_`, `/`, etc.)
+- insérer au final un `sku` du type `BOI-1234`.
 
 ```sql
 insert into produits (sku, code_couleur, ingredients) values (
 	'boi 1234', -- Utiliser upper et regexp_replace sur cette colonne
-	'#FF8800', 
-	'Boisson orange', 
-	'sucre, arômes'
+	'#FF8800',
+	'Boisson orange : sucre, arômes'
 );
 
 insert into produits (sku, code_couleur, ingredients) values (
 	'Boi_1234', -- Utiliser upper et regexp_replace sur cette colonne
-	'#00FF00', 
-	'Boisson pomme', 
-	'colorant E102'
+	'#00FF00',
+	'Boisson pomme : colorant E102'
 );
 ```
 
-### 3. `select` avec `~` et `regexp_matches`
+### 3. `select` avec `regexp` et `regexp_substr`
 
 Pour les deux exercices suivants, exécutez les insertions suivantes:
 
@@ -477,7 +514,7 @@ Pour les deux exercices suivants, exécutez les insertions suivantes:
 -- Quelques produits "normaux" et "série spéciale -25XX"
 insert into produits (sku, code_couleur, ingredients) values
 ('BOI-2501', '#FF8800', 'Ingrédients : eau, sucre, colorant E102, conservateur E220'),
-('BOI-2509', '#FFA500', 'Eau, arômes, E330, E414, colorant E160a'),          -- E160a => la regex E[0-9]{3} extrait "E160"
+('BOI-2509', '#FFA500', 'Eau, arômes, E330, E414, colorant E160a'),          -- plusieurs additifs : seul le premier (E330) est extrait
 ('JUS-2510', '#F4D03F', 'Jus de pomme, antioxydant E300, acidifiant E330'),
 ('CHP-2599', '#D35400', 'Pomme de terre, sel, paprika, exhausteur E621'),
 ('BAR-2500', '#8E44AD', 'Céréales, sirop de glucose, émulsifiant E322, E322'), -- E322 répété
@@ -486,25 +523,22 @@ insert into produits (sku, code_couleur, ingredients) values
 ('BOI-2401', '#00FF00', 'Eau, sucre'),                                       -- aucun additif E###
 ('SOU-2601', '#3498DB', 'Tomates, eau, sel, correcteur d’acidité E509'),
 ('THE-1234', '#2ECC71', 'Thé, arômes naturels, colorant E150d'),             -- extrait "E150" (car E150d)
-('BIS-2314', '#111111', 'Farine, sucre, E202'); 
+('BIS-2314', '#111111', 'Farine, sucre, E202');
 ```
 
 Sur la table `produits` remplie avec quelques lignes, écrivez les requêtes suivantes.
 
-#### a) `select` qui utilise `~`
+#### a) `select` qui utilise `regexp`
 
 Sélectionner les produits dont le `sku` correspond à une **série spéciale -25XX**, par exemple tous les codes finissant par `-25XX`.
 
-#### b) `select` qui utilise `regexp_matches`
+#### b) `select` qui utilise `regexp_substr`
 
 On suppose que la colonne `ingredients` peut contenir des codes d’additifs, par exemple :
 
 - `Ingrédients : sucre, colorant E102, conservateur E220`
 - `Eau, arômes, E330, E414, colorant E160a`
 
-Écrire une requête qui, pour chaque produit contenant au moins un additif, **extrait un code d’additif** de la forme `E` suivi de 3 chiffres (par exemple `E220`).
+Écrire une requête qui, pour chaque produit contenant au moins un additif, **extrait le premier code d’additif** de la forme `E` suivi de 3 chiffres (par exemple `E102`).
 
-*Indication : un code d’additif peut être modélisé par le motif `E[0-9]{3}`.*
-
-
-
+*Indication : un code d’additif peut être modélisé par le motif `E[0-9]{3}`. Utilisez `regexp` dans le `where` pour ne garder que les produits qui en contiennent un.*

@@ -72,9 +72,10 @@ Thèmes des TP (chacun a sa grille dans `docs/grilles/`) :
 - **TP3** — « Enquête SQL : l'IA trop zélée » : DDL avancé sur une BD fournie.
 
 Base de données d'exemple pour les démos de jointures/agrégations : **Chinook**
-(`docs/public/databases/chinook.sql`). ⚠️ Le fichier présent est encore la version **PostgreSQL** :
-il faut le remplacer par la version MySQL/MariaDB officielle, puis revalider toutes les requêtes
-du module 4 (les noms de tables et de colonnes diffèrent légèrement).
+(`docs/public/databases/chinook.sql`), dans une **traduction française** propre au cours
+(`artiste`, `piste`, `ligne_facture`, `nom_famille`…). Ne pas la remplacer par la version
+officielle MySQL, qui est en anglais : toutes les requêtes du module 4 et des labs 06–07 en
+dépendent. Script MariaDB autoportant (`drop database` + `create` + `use`), validé sur serveur.
 Import : ouvrir le `.sql` dans DBeaver et exécuter tout le script (`Alt + X`).
 
 ---
@@ -89,10 +90,11 @@ reste à faire à la main (captures, vidéos, vérifications DBeaver). Tenir les
 | Partie | État |
 |---|---|
 | Modules 1, 2, 3 et labs 01, 03, 04, 05 | ✅ texte converti — captures d'écran encore à refaire (🧑 dans le journal) |
-| Modules 4, 5 | ⏳ encore en PostgreSQL |
-| Labs 06 à 09 | ⏳ non revus — mentions explicites de PostgreSQL dans lab06 et lab09 |
-| `module_03_evenement_*.sql` | ✅ réécrits en MariaDB |
-| `chinook.sql`, `tp2_*`, `tp3_*` | ⏳ encore en syntaxe PostgreSQL |
+| Module 4 et labs 06, 07 | ✅ convertis, activés et validés sur serveur (2026-10-12) |
+| Module 5 | ⏳ encore en PostgreSQL |
+| Labs 08, 09 | ⏳ non revus — mentions explicites de PostgreSQL dans lab09 |
+| `module_03_evenement_*.sql`, `chinook.sql`, `tp2_guilde_structure.sql` | ✅ réécrits en MariaDB |
+| `tp2_bd1_depart.sql`, `tp3_*` | ⏳ à vérifier / encore en syntaxe PostgreSQL |
 | TP1 | mis de côté, non converti (décision du prof, 2026-09-09) |
 
 Différences à respecter en écrivant ou en convertissant du contenu :
@@ -111,6 +113,9 @@ Différences à respecter en écrivant ou en convertissant du contenu :
 - `like` est **insensible à la casse** par défaut (collations `_ci`), contrairement à PostgreSQL.
 - Pas d'opérateurs `~` / `~*` → **`regexp` / `rlike`**. Pas de `full join` → le contournement
   `left join union right join`, à présenter comme une limite du SGBD.
+- Dans un motif `regexp`, **doubler les antislashs** (`'\\d'`, `'\\.'`) : sinon MariaDB les retire
+  sans erreur (`'\d'` devient `d`). `regexp` ignore la casse (`(?-i)` pour la forcer), pas les
+  accents. Pas de `regexp_matches` : `regexp_substr` (première occurrence seulement).
 - `group by` est **permissif** (colonnes non agrégées tolérées selon `ONLY_FULL_GROUP_BY`) :
   un exemple peut « marcher » tout en étant une mauvaise pratique — piège pédagogique à signaler.
 - Import/export dans DBeaver : **`Dump database`** (mysqldump). Le dump ne contient ni

@@ -492,27 +492,88 @@ corrigé : ils ont été calculés hors SGBD, faute d'accès au serveur local.
 
 ---
 
-## Module 4 — Jointures et agrégations ⏳ À FAIRE
+## Module 4 — Jointures et agrégations ✅ TERMINÉ (2026-10-12)
 
-- `01-expressions-regulieres.md` — **page la plus touchée du module** (~30 mentions).
-  L'opérateur `~` de PostgreSQL n'existe pas : c'est `regexp` / `rlike` en MariaDB.
-  `~*` (insensible à la casse) → comportement par défaut selon la collation.
-  Les fonctions `regexp_replace` / `regexp_substr` existent en MariaDB 10.0+ (ok).
-- `02-jointures.md` — **la section « Full join » (lignes 226-250) doit être réécrite** :
-  MariaDB ne supporte pas `full join`. À présenter comme une limite du SGBD, avec le
-  contournement classique `left join union right join`. La commande d'import de Chinook
-  change aussi.
-- `03-fonctions-agregation.md` / `04-group-by-having.md` — quasi identiques. Attention :
-  MariaDB est **permissif** sur `group by` (colonnes non agrégées acceptées selon le mode
-  `ONLY_FULL_GROUP_BY`) alors que PostgreSQL refuse. Un exemple qui « marche » en MariaDB
-  mais qui est une mauvaise pratique : piège pédagogique à ajouter.
-- `05-sous-requetes-correlees.md` — compatible.
+Module activé dans `config.mts` (nav + sidebar), ainsi que les labs 06 et 07.
 
-🧑 **Base Chinook** : il faut la version **MySQL/MariaDB** de `docs/public/databases/chinook.sql`
-(elle existe officiellement). Les noms de tables/colonnes peuvent différer légèrement de la
-version PostgreSQL — **toutes les requêtes d'exemple du module 4 sont à revalider** une fois
-la nouvelle base importée.
-🧑 **Images** : `group-by-chinook.svg` (contient du texte SQL/noms de colonnes à revoir).
+**Base Chinook — convertie, pas remplacée**
+La version officielle MySQL de Chinook est en **anglais** (`Artist`, `Track`, `InvoiceLine`…),
+alors que celle du cours est une **traduction française** (`artiste`, `piste`, `ligne_facture`,
+`nom_famille`, `representant_id`…) avec des données retouchées (François Tremblay à Montréal,
+4 clients sans représentant). La remplacer aurait obligé à réécrire toutes les requêtes du module
+et des labs. Le `pg_dump` a donc été **converti** en script MariaDB lisible, même principe que
+les bases du module 3 :
+- `drop database if exists` + `create database ... character set utf8mb4` + `use` en tête;
+- `integer` + séquence → `int primary key auto_increment`, `numeric(10,2)` → `decimal(10,2)`,
+  `timestamp` → `datetime`;
+- FK déclarées dans les `create table`, sauf la FK récursive `employe.superviseur_id`, ajoutée
+  par `alter table` (même règle qu'au lab 03). Les index `IFK_*` ne sont pas recréés : InnoDB
+  indexe déjà les colonnes de FK;
+- `COPY` → `insert` par lots de 500 lignes, id explicites. Une piste contient des antislashs
+  (`Cavalleria Rusticana \ Act \ ...`) : doublés dans le script.
+
+**✅ Validé sur serveur le 2026-10-12** (MariaDB 12.3.3) : import en moins d'une seconde,
+décomptes identiques à la version PostgreSQL (275 artistes, 347 albums, 3503 pistes, 8 employés,
+59 clients, 405 factures, 2202 lignes de facture, 8715 liens liste/piste), 11 FK, tout en InnoDB,
+accents intacts (`Montréal` : 8 caractères / 9 octets). **Chaque bloc SQL des pages 02 à 05** a été
+exécuté sur la base : aucun échec, sauf le `full join` volontairement montré comme refusé.
+Les exercices des labs 06 et 07 retournent tous des lignes.
+
+**`01-expressions-regulieres.md`** — section SQL réécrite (« Utilisation avec MariaDB »)
+- `~` → `regexp` (+ `not regexp`, `rlike` synonyme). Astuce clavier pour taper `~` retirée.
+- Encadré jaune : `regexp` **ignore la casse** (collation `_ci`), `[A-Z]` accepte les minuscules;
+  `(?-i)` en tête de motif force la casse. Vérifié : `'Abc' regexp '^a'` → 1,
+  `'Abc' regexp '(?-i)^a'` → 0. Les accents, eux, ne sont **pas** ignorés par `regexp`
+  (`'été' regexp 'ete'` → 0), contrairement à `like`.
+- Encadré rouge : **l'antislash doit être doublé**. Vérifié : `'\d'` devient `d` et `'\.'` devient
+  `.`; `'123' regexp '^\d{3}$'` → 0 mais `'ddd' regexp '^\d{3}$'` → 1, sans aucune erreur.
+  Tous les motifs de la page utilisent `\\`.
+- `regexp_matches(..., 'g')` → `regexp_substr`, qui ne retourne que la **première** occurrence
+  (chaîne vide, pas `NULL`, s'il n'y en a pas). `regexp_replace` remplace toutes les occurrences
+  sans drapeau `'g'` : l'encadré sur `'g'` est remplacé en conséquence.
+- Ajout d'un `create database module_04_regex` + `use` avant la table d'exemple.
+- `code_postal varchar` (sans longueur, refusé) → `varchar(10)` — pas `varchar(6)`, sinon
+  `'G1K 7P4'` déclencherait *Data too long* au lieu de l'erreur de `check` attendue.
+  Vérifié : Alice échoue sur `utilisateur.code_postal`, Paul sur `utilisateur.courriel`.
+- Exercice 1 : indication ajoutée — sans `(?-i)`, le `check` sur `sku` laisserait passer
+  `boi-1234` (vérifié : avec `(?-i)`, l'insertion est refusée).
+- **Bug pré-existant corrigé** : les deux `insert` de l'exercice 2 avaient 4 valeurs pour
+  3 colonnes (`'Boisson orange'` en trop). Le nom du produit est fusionné dans `ingredients`.
+- Commentaire de `BOI-2509` corrigé : le premier additif extrait est `E330`, pas `E160`.
+- Lien vers la doc PostgreSQL → doc MariaDB.
+
+**`02-jointures.md`**
+- Import : `psql -f` → DBeaver (`Ouvrir un fichier…`, `Alt + X`, `F5`), encadré « autoportant »
+  et encadré rouge sur le `drop database` en tête du script.
+- **Section `full join` réécrite** : présentée comme une limite de MariaDB/MySQL (erreur de
+  syntaxe vérifiée), version standard montrée avec ❌, puis contournement
+  `left join` **`union`** `right join` — 64 lignes (59 clients + 5 employés sans client).
+  Encadré sur le piège de `union` qui fusionne les doublons légitimes (ajouter la PK).
+  `union` n'avait pas été vu avant : il est expliqué sur place.
+
+**`04-group-by-having.md`** — nouvelle section **« Piège : MariaDB accepte des `group by`
+incomplets »**, avec un exemple vérifié (`select g.nom, p.nom, count(*) ... group by g.nom`
+s'exécute et affiche une piste arbitraire par genre). `sql_mode` du serveur vérifié :
+`ONLY_FULL_GROUP_BY` n'y est pas. Consigne : la requête est considérée fausse même si elle « marche ».
+
+**`03-fonctions-agregation.md`** — aucune modification.
+
+**`05-sous-requetes-correlees.md`** — compatible. Corrigé au passage : le commentaire de
+l'analogie C# parlait de la moyenne de « toutes les pistes » au lieu des pistes du même genre;
+coquille « enejeux ».
+
+**`index.md`** — objectif des jointures reformulé (`FULL` n'existe pas en MariaDB).
+
+**Labs 06 et 07**
+- « portée : base de données `chinook` » → bloc `use chinook;`.
+- Lab 06, section 5 : `~` → `regexp`, avec un encadré de rappel (casse, antislash doublé).
+- **Bug pré-existant corrigé** (lab 06, requête 2) : la sous-requête faisait
+  `select c.client_id from facture f` — une référence à la table externe, donc vraie pour tous
+  les clients. Corrigé en `f.client_id` (58 clients). « id_facture » → `facture_id`.
+- Lab 07, 2a) 2. : `media_type_id` (nom anglais) → `type_media_id`.
+
+**Image** `group-by-chinook.svg` : vérifiée, elle ne contient que des noms de pistes et de genres,
+aucune syntaxe propre à un SGBD. Rien à refaire.
 
 ---
 
@@ -545,7 +606,7 @@ le texte du SVG) — à refaire selon le modèle utilisateur@hôte de MariaDB.
 |---|---|---|
 | `docs/labs/lab01-installations.md` | ✅ | Texte converti — reste 13 captures 🧑 |
 | `docs/labs/lab09-securite.md` | 3 | Suit les changements du module 5 |
-| `docs/labs/lab03-ddl.md`, `lab06-jointures.md` | 1-2 | Commandes d'import |
+| `docs/labs/lab03-ddl.md`, `lab06-jointures.md` | ✅ | Convertis (lab 03 en septembre, lab 06 avec le module 4) |
 | `docs/travaux/tp1-creation-bd.md` | — | ⏭️ **Ignoré** (décision du 2026-09-09) |
 | `docs/travaux/tp3-ddl-avance.md` | 3 | Énoncé noté, dépend du module 5 |
 | `docs/public/databases/*.sql` | — | Tous les jeux de données à reconvertir 🧑 |

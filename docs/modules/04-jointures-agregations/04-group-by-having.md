@@ -135,6 +135,37 @@ Pourquoi grouper par `ar.nom` ?
 
 ---
 
+### Piège : MariaDB accepte des `group by` incomplets
+
+La règle « toute colonne non agrégée du `select` doit être dans le `group by` » vient de la norme
+SQL. PostgreSQL, SQL Server ou Oracle **refusent** une requête qui ne la respecte pas.
+MariaDB, lui, est **permissif** par défaut : la requête suivante s'exécute sans erreur.
+
+```sql
+-- ⚠️ Accepté par MariaDB, mais incorrect
+select g.nom genre, p.nom piste, count(*) nombre_pistes
+from genre g
+join piste p
+	on g.genre_id = p.genre_id
+group by g.nom;
+```
+
+Le résultat a l'air normal : une ligne par genre, avec le bon nombre de pistes. Mais la colonne
+`piste` n'a **aucun sens** : un genre contient des centaines de pistes, et MariaDB en affiche
+une seule, choisie au hasard. Rien ne garantit que ce sera la même la prochaine fois.
+
+<div class="my-3 rounded-lg border border-red-300 bg-red-50 p-3 text-red-900">
+<strong>Important</strong><br>
+Qu'une requête s'exécute ne prouve pas qu'elle est correcte. Dans ce cours, respectez la règle
+même si MariaDB ne vous y oblige pas : <strong>chaque colonne du <code>select</code> est soit
+dans le <code>group by</code>, soit dans une fonction d'agrégation</strong>. Une requête qui ne la
+respecte pas est considérée comme fausse, même si elle « marche ».
+</div>
+
+> Ce comportement dépend d'une option du serveur, `ONLY_FULL_GROUP_BY`. Quand elle est activée, MariaDB refuse ces requêtes comme les autres SGBD. Elle ne l'est pas dans l'installation par défaut.
+
+---
+
 ### `where` avant `group by`
 
 `where` sert à filtrer les lignes **avant** que les groupes soient formés.

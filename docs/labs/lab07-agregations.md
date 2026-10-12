@@ -16,7 +16,11 @@ Si vous ne l'avez pas encore importée, référez-vous aux instructions du modul
 <a href="../modules/04-jointures-agregations/02-jointures#base-de-donnees-de-test-a-importer-chinook">Importer Chinook</a>
 </div>
 
-Créez un nouveau script SQL dans DBeaver (portée : base de données `chinook`).
+Créez un nouveau script SQL dans DBeaver et **commencez-le par son `use`** :
+
+```sql
+use chinook;
+```
 
 ---
 
@@ -40,7 +44,7 @@ Créez un nouveau script SQL dans DBeaver (portée : base de données `chinook`)
 ### a) Regroupements simples
 
 1. Afficher le **nombre de clients par ville**. Trier par nombre décroissant, puis par ville.
-2. Afficher le **nombre de pistes par type de média** (`media_type_id`).
+2. Afficher le **nombre de pistes par type de média** (`type_media_id`).
 3. Afficher le **prix unitaire moyen des pistes par album** (`album_id`).
 
 ### b) `Group by` avec jointures

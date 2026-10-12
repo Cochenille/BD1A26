@@ -69,9 +69,9 @@ Si on fait un parallèle avec **C#**, on peut voir cette logique comme un `forea
 ```csharp
 foreach (Piste pisteCourante in pistes)
 {
-    double dureeMoyenneDesPistes = // Code qui calcule la durée moyenne de toutes les pistes
+    double dureeMoyenneDuGenre = // Code qui calcule la durée moyenne des pistes du même genre que pisteCourante
 
-    if (pisteCourante.Millisecondes > dureeMoyenneDesPistes) // À chaque piste, on compare la durée en millisecondes à la durée moyenne
+    if (pisteCourante.Millisecondes > dureeMoyenneDuGenre) // À chaque piste, on compare sa durée à la moyenne de son genre
     {
         Console.WriteLine(pisteCourante.Nom);
     }
@@ -247,7 +247,7 @@ where p.millisecondes > stats.moyenne_genre
 order by p.genre_id, p.millisecondes desc;
 ```
 
-La version avec jointure calcule la moyenne une seule fois par groupe plutôt qu'une fois par ligne. Dans le contexte de ce cours, avec des bases de données de petite taille, la différence ne sera pas perceptible — c'est simplement bon à savoir si un jour vous êtes confrontés à des enejeux de performance.
+La version avec jointure calcule la moyenne une seule fois par groupe plutôt qu'une fois par ligne. Dans le contexte de ce cours, avec des bases de données de petite taille, la différence ne sera pas perceptible — c'est simplement bon à savoir si un jour vous êtes confrontés à des enjeux de performance.
 
 ## À retenir
 

@@ -4,7 +4,7 @@ Liste de travail pour la migration MariaDB. Ce fichier ne contient **que** ce qu
 intervention humaine (captures, vidéos, vérifications dans DBeaver). Le « pourquoi » de chaque
 point et l'historique complet sont dans [`MIGRATION-MARIADB.md`](MIGRATION-MARIADB.md).
 
-Dernière mise à jour : **2026-09-18**.
+Dernière mise à jour : **2026-10-12**.
 
 ---
 
@@ -110,8 +110,10 @@ Les deux ont un bandeau rouge d'avertissement en place en attendant.
 - [x] **`docs/grilles/grille-examen1.md`** — rédigée le 2026-09-18 (30 modélisation / 30 DDL /
       40 SQL) et ajoutée à la sidebar.
 - [ ] **Page d'accueil** — ajouter la section « semaine 5 » avec ses deux `WeeklyTodo`.
-- [ ] **Module 4** — Chinook version MySQL/MariaDB à récupérer, `full join` à réécrire,
-      `regexp` au lieu de `~`, piège `ONLY_FULL_GROUP_BY` à ajouter.
+- [x] **Module 4** — converti et activé le 2026-10-12, Chinook validé sur le serveur
+      (voir `MIGRATION-MARIADB.md`). Aucune capture ni vidéo à refaire dans ce module.
+- [ ] **Prévenir les étudiants** qui auraient importé l'ancien `chinook.sql` : c'était un dump
+      PostgreSQL, il ne s'importe pas dans MariaDB. Retélécharger le fichier.
 - [ ] **Module 5** — le plus divergent : `04-gestion-de-comptes.md` (modèle utilisateur@hôte)
       et `05-hachage-mots-de-passe.md` (pas de `pgcrypto`) sont à repenser.
 - [ ] **`docs/public/plan-cours.pdf`** — mentionne probablement PostgreSQL.
