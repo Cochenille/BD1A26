@@ -109,7 +109,7 @@ Les deux ont un bandeau rouge d'avertissement en place en attendant.
       **hors dépôt** : le dépôt GitHub est public.
 - [x] **`docs/grilles/grille-examen1.md`** — rédigée le 2026-09-18 (30 modélisation / 30 DDL /
       40 SQL) et ajoutée à la sidebar.
-- [ ] **Page d'accueil** — ajouter la section « semaine 5 » avec ses deux `WeeklyTodo`.
+- [x] **Page d'accueil** — sections des semaines 5 à 8 en place (semaine de lecture comprise), 2026-10-19.
 - [x] **Module 4** — converti et activé le 2026-10-12, Chinook validé sur le serveur
       (voir `MIGRATION-MARIADB.md`). Aucune capture ni vidéo à refaire dans ce module.
 - [ ] **Prévenir les étudiants** qui auraient importé l'ancien `chinook.sql` : c'était un dump
