@@ -479,7 +479,19 @@ refait en deux parties, dont une évaluée en classe sous surveillance.
 ### Partie B — hors dépôt
 
 Le dépôt `Cochenille/BD1A26` est **public** (vérifié). L'énoncé de la partie B, son corrigé et sa
-base remplie ne sont donc **pas** dans le dépôt : ils ont été remis au prof directement.
+base remplie ne sont donc **pas** dans le dépôt : ils vivent dans `examens/tp2-partie-b/`, un
+dossier local exclu par le `.gitignore` (`/examens/`, comme l'examen 1).
+
+**Refaite le 2026-10-19** : la première version, remise au prof en septembre, était introuvable.
+Nouvelle version, même structure que la partie A, base `guilde_partie_b` :
+- `tp2_guilde_partie_b.sql` — base autoportante (`drop` + `create` + `use`) : 10 lieux,
+  25 quêtes, 25 aventuriers, 30 équipements, 30 contrats.
+- `07B-A26-TP2B.docx` / `.pdf` — énoncé de 11 questions sur 2 pages (4 sélections,
+  4 sous-requêtes dont `> all` et `not in`, 1 `insert`, 1 `update`, 1 `delete`), 1 pt chacune.
+- `tp2_partie_b_corrige.sql` — réponses, résultats attendus et pièges prévus (bornes
+  d'intervalles atteintes, inactifs à exclure, doublons, égalité stricte sur `> all`).
+- ✅ **Validé sur serveur** (MariaDB 12.3.3) : chaque requête du corrigé retourne exactement le
+  résultat annoncé; `update` → 4 lignes, `delete` → 4 lignes. La base a été réimportée après coup.
 
 Le TP2 est découpé en **deux pages** (décision du prof, 2026-09-18) pour que les étudiants
 n'aient pas le déroulement de l'évaluation supervisée avant d'entrer en classe :
@@ -487,8 +499,9 @@ n'aient pas le déroulement de l'évaluation supervisée avant d'entrer en class
 `tp2-partie-b.md` porte le déroulement — page **non listée**, à décommenter dans `config.mts`
 au début de la période du 22 octobre. Le nombre de questions a aussi été retiré de la grille.
 
-🧑 Importer une fois `tp2_guilde_partie_b.sql` dans DBeaver pour confirmer les résultats du
-corrigé : ils ont été calculés hors SGBD, faute d'accès au serveur local.
+⚠️ La page `tp2-partie-b.md` n'est que **retirée de la sidebar** : VitePress construit toutes les
+pages, donc elle est déjà accessible par son URL. Elle ne doit contenir que le déroulement,
+jamais les questions.
 
 ---
 

@@ -104,9 +104,10 @@ Les deux ont un bandeau rouge d'avertissement en place en attendant.
       doivent être réimportées. La commande n'est plus enseignée (tout passe par DBeaver).
 - [x] **TP2** — refait en deux parties et converti en MariaDB le 2026-09-18
       (voir `MIGRATION-MARIADB.md`, section « Évaluations »).
-- [ ] **Partie B du TP2** — importer `tp2_guilde_partie_b.sql` une fois dans DBeaver et
-      confirmer les résultats attendus du corrigé (calculés hors SGBD). Ces trois fichiers sont
-      **hors dépôt** : le dépôt GitHub est public.
+- [x] **Partie B du TP2** — refaite et validée sur serveur le 2026-10-19, dans
+      `examens/tp2-partie-b/` (exclu de git : le dépôt GitHub est public).
+- [ ] **22 octobre, début de période** — déposer `tp2_guilde_partie_b.sql` et l'énoncé pour les
+      étudiants, et décommenter « TP2 — Partie B » dans `config.mts`.
 - [x] **`docs/grilles/grille-examen1.md`** — rédigée le 2026-09-18 (30 modélisation / 30 DDL /
       40 SQL) et ajoutée à la sidebar.
 - [x] **Page d'accueil** — sections des semaines 5 à 8 en place (semaine de lecture comprise), 2026-10-19.
