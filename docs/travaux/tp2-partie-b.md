@@ -10,7 +10,7 @@ aside: false
 Les questions vous sont remises séparément par l'enseignant.
 </div>
 
-- Durée : **1 heure**, en début de période.
+- Durée : **2 heures**, en début de période.
 - Individuel.
 - Porte sur les mêmes notions que la partie A : `insert`, `select`, opérateurs, sous-requêtes,
   `update` et `delete` ciblés.

@@ -22,7 +22,7 @@ hero:
     :steps="[
       {
         title: 'TP2 — partie B, en classe',
-        description: 'Évaluation supervisée d’une heure, en début de période. Les consignes sont remises en classe.',
+        description: 'Évaluation supervisée de deux heures, en début de période. Les consignes sont remises en classe.',
         badge: 'Évaluation — 7 %',
         links: [
           { text: 'Énoncé du TP2', href: '/travaux/tp2-sql', variant: 'secondary' }

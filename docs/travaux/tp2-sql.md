@@ -9,7 +9,7 @@ Le TP2 se fait en **deux parties** :
 | | Où | Quand | Poids |
 |---|---|---|---|
 | **Partie A** | à la maison | remise le **22 octobre, en début de période** | 6 % |
-| **Partie B** | en classe, supervisée | **22 octobre**, 1 heure | 7 % |
+| **Partie B** | en classe, supervisée | **22 octobre**, 2 heures | 7 % |
 
 - Modalité : individuel.
 - Remise de la partie A : fichier `.sql` sur LÉA dans le travail concerné.
@@ -257,7 +257,7 @@ de départ** — insertions, sélections, sous-requêtes, modifications, suppres
 
 # Partie B — en classe, supervisée (7 %)
 
-La partie B a lieu **le 22 octobre**, en début de période, et dure **une heure**.
+La partie B a lieu **le 22 octobre**, en début de période, et dure **deux heures**.
 Elle porte sur les mêmes notions que la partie A.
 
 **Les consignes complètes vous seront remises en classe ce jour-là.** Vous n'avez rien à
