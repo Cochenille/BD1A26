@@ -87,3 +87,4 @@ typings/
 
 # Examens et corrigés (confidentiels, jamais publiés)
 /examens/
+/correction/

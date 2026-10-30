@@ -492,6 +492,9 @@ Nouvelle version, même structure que la partie A, base `guilde_partie_b` :
   d'intervalles atteintes, inactifs à exclure, doublons, égalité stricte sur `> all`).
 - ✅ **Validé sur serveur** (MariaDB 12.3.3) : chaque requête du corrigé retourne exactement le
   résultat annoncé; `update` → 4 lignes, `delete` → 4 lignes. La base a été réimportée après coup.
+- **Variante de reprise** (2026-10-25), même base `guilde_partie_b`, mêmes notions, 11 nouvelles
+  questions : `07B-A26-TP2B-reprise.docx` / `.pdf` et `tp2_partie_b_reprise_corrige.sql`.
+  ✅ Validée sur serveur sur une copie de la base (`update` → 3 lignes, `delete` → 3 lignes).
 
 Le TP2 est découpé en **deux pages** (décision du prof, 2026-09-18) pour que les étudiants
 n'aient pas le déroulement de l'évaluation supervisée avant d'entrer en classe :
@@ -583,6 +586,8 @@ coquille « enejeux ».
 - **Bug pré-existant corrigé** (lab 06, requête 2) : la sous-requête faisait
   `select c.client_id from facture f` — une référence à la table externe, donc vraie pour tous
   les clients. Corrigé en `f.client_id` (58 clients). « id_facture » → `facture_id`.
+- Lab 06 : corrigé ajouté à la fin de la page (2026-10-30), requêtes et nombres de lignes
+  validés sur MariaDB 12.3 avec `chinook.sql`.
 - Lab 07, 2a) 2. : `media_type_id` (nom anglais) → `type_media_id`.
 
 **Image** `group-by-chinook.svg` : vérifiée, elle ne contient que des noms de pistes et de genres,

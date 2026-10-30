@@ -133,3 +133,213 @@ Détails : <a href="../modules/04-jointures-agregations/01-expressions-reguliere
 
 - Afficher, pour chaque piste vendue : le **nom de la piste**, le **titre de l'album**, le **nom de l'artiste**, la **quantité** vendue et le **prix unitaire**. Trier par nom d'artiste.
 - Afficher le **prénom et nom du client**, la **date de la facture** et le **nom des pistes** achetées pour toutes les factures de **2010**. Trier par nom de client, puis par date.
+
+<details class="mt-6">
+<summary class="cursor-pointer font-semibold text-red-700">
+⚠️ Corrigé — À consulter seulement après avoir fait l'exercice
+</summary>
+
+<div class="bg-red-50 border border-red-300 text-red-900 rounded-lg p-4 mt-4">
+<strong>Important</strong><br>
+Assurez-vous d'avoir <strong>complété l'exercice</strong> ou, au minimum, d'avoir
+<strong>tenté sérieusement chacune des étapes</strong> avant de consulter le corrigé.<br><br>
+Le nombre de lignes indiqué sous chaque requête vous permet de vérifier votre propre résultat.
+Une autre écriture est correcte si elle retourne les mêmes lignes.
+</div>
+
+---
+
+### 1 — De la sous-requête à la jointure
+
+**Requête 1** — 114 lignes, comme la requête originale.
+
+```sql
+select p.nom piste, al.titre album, ar.nom artiste
+from piste p
+join album al on p.album_id = al.album_id
+join artiste ar on al.artiste_id = ar.artiste_id
+where ar.nom = 'Led Zeppelin';
+```
+
+**Requête 2** — 405 lignes.
+
+```sql
+select c.prenom, c.nom_famille, f.facture_id, f.date_facture
+from client c
+join facture f on c.client_id = f.client_id
+order by c.prenom, f.date_facture desc;
+```
+
+La requête originale retourne 58 lignes, soit une par client. La jointure en retourne une par
+**facture** : un client apparaît autant de fois qu'il a de factures.
+
+---
+
+### 2 — Inner join
+
+**a) 1** — 347 lignes.
+
+```sql
+select al.titre, ar.nom artiste
+from album al
+join artiste ar on al.artiste_id = ar.artiste_id
+order by ar.nom, al.titre;
+```
+
+**a) 2** — 8715 lignes.
+
+```sql
+select ll.nom liste_lecture, p.nom piste
+from liste_lecture ll
+join liste_lecture_piste llp on ll.liste_lecture_id = llp.liste_lecture_id
+join piste p on llp.piste_id = p.piste_id
+order by ll.nom, p.nom;
+```
+
+**b) 1** — 12 lignes.
+
+```sql
+select p.nom piste, al.titre album
+from piste p
+join album al on p.album_id = al.album_id
+where al.titre = 'Nevermind';
+```
+
+**b) 2** — 7 lignes.
+
+```sql
+select c.prenom, c.nom_famille, f.facture_id, f.date_facture
+from client c
+join facture f on c.client_id = f.client_id
+where c.prenom = 'Frank' and c.nom_famille = 'Harris';
+```
+
+**b) 3** — 130 lignes.
+
+```sql
+select p.nom, p.prix_unitaire
+from piste p
+join genre g on p.genre_id = g.genre_id
+where g.nom = 'Jazz'
+order by p.prix_unitaire desc;
+```
+
+Toutes ces pistes coûtent 0,99 $ : le tri est correct, même s'il ne change rien de visible ici.
+
+---
+
+### 3 — Left join
+
+8 lignes, dont une avec `NULL` : Andrew, le grand patron.
+
+```sql
+select e.prenom employe, s.prenom superviseur
+from employe e
+left join employe s on e.superviseur_id = s.employe_id
+order by s.nom_famille;
+```
+
+La table est jointe à elle-même : les alias `e` et `s` sont donc obligatoires. Un `join` simple
+ferait disparaître Andrew. En tri croissant, MariaDB place les `NULL` en premier.
+
+---
+
+### 4 — Transformer un `right join` en `left join`
+
+60 lignes, dont 5 employés sans client.
+
+```sql
+select r.prenom représentant, c.prenom client
+from employe r
+left join client c
+    on c.representant_id = r.employe_id
+order by r.prenom, c.prenom;
+```
+
+Il suffit d'inverser l'ordre des tables : celle dont on veut garder toutes les lignes (`employe`)
+passe à gauche du `join`.
+
+---
+
+### 5 — Expressions régulières avec jointures
+
+**Le nom de la piste commence par un chiffre** — 35 lignes.
+
+```sql
+select p.nom piste, al.titre album
+from piste p
+join album al on p.album_id = al.album_id
+where p.nom regexp '^[0-9]';
+```
+
+**Le nom de l'artiste contient un nombre** — 3 lignes : U2, UB40 et The 12 Cellists of The Berlin Philharmonic.
+
+```sql
+select nom
+from artiste
+where nom regexp '[0-9]+';
+```
+
+Aucune jointure n'est nécessaire ici. Le motif `'[0-9]'` donne le même résultat : dès qu'il y a un
+nombre, il y a au moins un chiffre.
+
+**Le courriel se termine par `.com`** — 22 lignes.
+
+```sql
+select prenom, nom_famille, pays
+from client
+where courriel regexp '\\.com$';
+```
+
+L'antislash est doublé pour désigner un vrai point. Sans lui, `'.com$'` retourne aussi 22 lignes
+dans Chinook, mais le point y signifie « n'importe quel caractère » : le motif accepterait
+aussi `xcom`.
+
+**Le nom de la piste ne contient pas de voyelle** — 13 lignes.
+
+```sql
+select p.nom piste, ar.nom artiste
+from piste p
+join album al on p.album_id = al.album_id
+join artiste ar on al.artiste_id = ar.artiste_id
+where p.nom not regexp '[aeiou]'
+order by p.nom;
+```
+
+Deux cas à remarquer dans le résultat :
+
+- `Gypsy` y figure parce que le `y` n'est pas dans le motif. Avec `'[aeiouy]'`, il reste 11 lignes.
+- `Já!!!` y figure parce que `regexp` ne reconnaît pas `á` comme un `a` : il ignore la casse, mais
+  pas les accents.
+
+---
+
+### 6 — Jointures multi-tables
+
+**Pistes vendues** — 2202 lignes, une par ligne de facture.
+
+```sql
+select p.nom piste, al.titre album, ar.nom artiste, lf.quantite, lf.prix_unitaire
+from ligne_facture lf
+join piste p on lf.piste_id = p.piste_id
+join album al on p.album_id = al.album_id
+join artiste ar on al.artiste_id = ar.artiste_id
+order by ar.nom;
+```
+
+Le prix unitaire vient de `ligne_facture` : c'est le prix payé au moment de la vente. La table
+`piste` a aussi une colonne `prix_unitaire`, d'où l'importance de préfixer les colonnes.
+
+**Factures de 2010** — 443 lignes.
+
+```sql
+select c.prenom, c.nom_famille, f.date_facture, p.nom piste
+from client c
+join facture f on c.client_id = f.client_id
+join ligne_facture lf on f.facture_id = lf.facture_id
+join piste p on lf.piste_id = p.piste_id
+where year(f.date_facture) = 2010
+order by c.nom_famille, f.date_facture;
+```
+
+</details>
