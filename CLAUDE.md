@@ -94,7 +94,8 @@ reste à faire à la main (captures, vidéos, vérifications DBeaver). Tenir les
 | Module 5 | ⏳ encore en PostgreSQL |
 | Labs 08, 09 | ⏳ non revus — mentions explicites de PostgreSQL dans lab09 |
 | `module_03_evenement_*.sql`, `chinook.sql`, `tp2_guilde_structure.sql` | ✅ réécrits en MariaDB |
-| `tp2_bd1_depart.sql`, `tp3_*` | ⏳ à vérifier / encore en syntaxe PostgreSQL |
+| `tp2_bd1_depart.sql` | ⏳ à vérifier |
+| TP3 | ✅ refait en MariaDB (2026-11-02), non publié : tout est dans `examens/tp3/` (hors dépôt) — l'ancien TP3 PostgreSQL encore dans `docs/` sera supprimé à la publication |
 | TP1 | mis de côté, non converti (décision du prof, 2026-09-09) |
 
 Différences à respecter en écrivant ou en convertissant du contenu :

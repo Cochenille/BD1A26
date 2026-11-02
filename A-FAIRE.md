@@ -4,7 +4,7 @@ Liste de travail pour la migration MariaDB. Ce fichier ne contient **que** ce qu
 intervention humaine (captures, vidéos, vérifications dans DBeaver). Le « pourquoi » de chaque
 point et l'historique complet sont dans [`MIGRATION-MARIADB.md`](MIGRATION-MARIADB.md).
 
-Dernière mise à jour : **2026-10-12**.
+Dernière mise à jour : **2026-11-02**.
 
 ---
 
@@ -115,6 +115,15 @@ Les deux ont un bandeau rouge d'avertissement en place en attendant.
       (voir `MIGRATION-MARIADB.md`). Aucune capture ni vidéo à refaire dans ce module.
 - [ ] **Prévenir les étudiants** qui auraient importé l'ancien `chinook.sql` : c'était un dump
       PostgreSQL, il ne s'importe pas dans MariaDB. Retélécharger le fichier.
+- [x] **TP3** — refait le 2026-11-02 (nouveau scénario, MariaDB, deux parties : 10 % maison +
+      5 % en classe), validé sur serveur. Énoncés, base, grille et corrigés dans `examens/tp3/`
+      (hors dépôt); le `README.md` de ce dossier décrit la publication.
+- [ ] **Publier la partie 1 du TP3** — confirmer d'abord les dates proposées (remise
+      26 novembre, partie 2 le 3 décembre) et l'interdiction de l'IA, puis suivre
+      `examens/tp3/README.md`. L'ancien TP3 (PostgreSQL) sera alors supprimé de `docs/`.
+- [ ] **Module 5** — doit enseigner, en MariaDB, tout ce que la partie 2 du TP3 utilise :
+      `modify`/`rename column`, `drop foreign key`, comptes `'x'@'localhost'`, `grant`/`revoke`
+      par base et par table, `show grants`, hachage `sha2` + sel.
 - [ ] **Module 5** — le plus divergent : `04-gestion-de-comptes.md` (modèle utilisateur@hôte)
       et `05-hachage-mots-de-passe.md` (pas de `pgcrypto`) sont à repenser.
 - [ ] **`docs/public/plan-cours.pdf`** — mentionne probablement PostgreSQL.
