@@ -118,9 +118,9 @@ Les deux ont un bandeau rouge d'avertissement en place en attendant.
 - [x] **TP3** — refait le 2026-11-02 (nouveau scénario, MariaDB, deux parties : 10 % maison +
       5 % en classe), validé sur serveur. Énoncés, base, grille et corrigés dans `examens/tp3/`
       (hors dépôt); le `README.md` de ce dossier décrit la publication.
-- [ ] **Publier la partie 1 du TP3** — confirmer d'abord les dates proposées (remise
-      26 novembre, partie 2 le 3 décembre) et l'interdiction de l'IA, puis suivre
-      `examens/tp3/README.md`. L'ancien TP3 (PostgreSQL) sera alors supprimé de `docs/`.
+- [x] **Publier la partie 1 du TP3** — publiée le 2026-11-04 (dates et interdiction de l'IA
+      confirmées : remise 26 novembre, partie 2 le 3 décembre, 1 h 30). Ancien TP3 supprimé.
+- [ ] **Publier la partie 2 du TP3** le 3 décembre — voir `examens/tp3/README.md`.
 - [ ] **Module 5** — doit enseigner, en MariaDB, tout ce que la partie 2 du TP3 utilise :
       `modify`/`rename column`, `drop foreign key`, comptes `'x'@'localhost'`, `grant`/`revoke`
       par base et par table, `show grants`, hachage `sha2` + sel.

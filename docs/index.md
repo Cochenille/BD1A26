@@ -9,6 +9,52 @@ hero:
     alt: Logo du cours
 
 ---
+<section id="semaine-10">
+<div class="relative flex py-5 items-center mt-10">
+   <div class="grow border-t border-gray-400"></div>
+   <span class="shrink mx-4 text-gray-400">Semaine 10 — du 5 au 11 novembre</span>
+  <div class="grow border-t border-gray-400"></div>
+</div>
+<div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+  <WeeklyTodo
+    title="À faire cette semaine — En classe"
+    subtitle="Activités réalisées pendant la séance."
+    :steps="[
+      {
+        title: 'Présentation du TP3',
+        description: 'Les billets fantômes du Festival Boréal : lecture de l’énoncé et import de la base.',
+        links: [
+          { text: 'Énoncé du TP3', href: '/travaux/tp3-festival', variant: 'primary' }
+        ]
+      },
+      {
+        title: 'Module 4 — Fonctions d’agrégation et group by',
+        links: [
+          { text: 'Théorie — fonctions d’agrégation', href: '/modules/04-jointures-agregations/03-fonctions-agregation', variant: 'primary' },
+          { text: 'Théorie — group by et having', href: '/modules/04-jointures-agregations/04-group-by-having', variant: 'secondary' }
+        ]
+      }
+    ]"
+  />
+
+  <WeeklyTodo
+    title="À préparer / compléter"
+    subtitle="À compléter de votre côté."
+    :steps="[
+      {
+        title: 'Commencer la partie 1 du TP3',
+        description: 'Fichier .sql à déposer sur LÉA, au plus tard en début de période le 26 novembre.',
+        badge: 'Remise — 10 %',
+        links: [
+          { text: 'Énoncé du TP3', href: '/travaux/tp3-festival', variant: 'primary' },
+          { text: 'Grille d’évaluation', href: '/grilles/grille-tp3', variant: 'secondary' }
+        ]
+      }
+    ]"
+  />
+</div>
+</section>
+
 <section id="semaine-8">
 <div class="relative flex py-5 items-center mt-10">
    <div class="grow border-t border-gray-400"></div>

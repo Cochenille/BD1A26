@@ -1,155 +1,106 @@
 ---
 title: Grille d'évaluation — TP3
+aside: false
 ---
 
 # Grille d'évaluation — Travail Pratique #3
 
-Chaque critère est évalué selon des niveaux de performance.  
-Les pondérations indiquent le poids de chaque critère dans la note finale.
+Le TP3 vaut **15 %** : la partie 1 (à la maison) compte pour **10 %**, la partie 2 (en classe,
+supervisée) pour **5 %**. Chaque partie est notée sur 100, puis ramenée à son poids.
+
+Chaque question est évaluée selon trois niveaux :
+
+| Niveau | Description | Note |
+|---|---|---|
+| **Complet** | L'instruction s'exécute et fait exactement ce qui est demandé : lignes, colonnes, ordre, noms. | 100 % |
+| **Partiel** | La logique est bonne, mais il manque un détail (voir les critères de chaque question). | 60 % |
+| **Nul** | L'instruction ne s'exécute pas, ou ne répond pas à la demande. | 0 % |
 
 ---
 
-## Partie A — Expressions régulières (15 %)
+## Partie 1 — à la maison (10 %)
 
-### Q1 — Filtre regex sur code_log (ALR-IA- + 3 chiffres)
+### A. Expressions régulières (25 points — 6,25 par question)
 
-| Niveau | Description | Note |
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Pattern regex correct. Colonnes, tri et limite conformes. | 100 % |
-| **Suffisant** | Fonctionnelle mais pattern imprécis ou détail mineur (tri, colonnes, limite). | 60 % |
-| **Invalide** | Non fonctionnelle ou pattern inopérant. | 0 % |
+| **1** Codes non conformes | Motif ancré (`^…$`), sensible à la casse (`(?-i)`), négation correcte. | Motif non ancré, ou casse ignorée (le code en minuscules passe pour conforme). |
+| **2** Courriels invalides | Motif ancré, un seul `@`, extension d'au moins deux lettres, point échappé (`\\.`). | Point non échappé, extension d'une lettre acceptée, tri absent. |
+| **3** Téléphones nettoyés | Filtre `regexp` sur un caractère non numérique; `regexp_replace` retire tous les séparateurs; alias. | Un séparateur oublié (espace, parenthèse), filtre absent. |
+| **4** Extraction dans les incidents | Deux `regexp_substr` corrects, filtre sur `critique`, alias, tri. | Un des deux motifs imprécis (extrait un code malformé, ou `SC-` non exigé). |
 
-### Q2 — Extraction du code de salle
+### B. Jointures (25 points — 6,25 par question)
 
-| Niveau | Description | Note |
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Extraction correcte du code de salle. Alias de colonne présent. | 100 % |
-| **Suffisant** | Fonctionnelle mais extraction imprécise ou alias manquant. | 60 % |
-| **Invalide** | Non fonctionnelle ou extraction incorrecte. | 0 % |
+| **5** Billets non conformes et revendeur | Deux jointures correctes, filtre de la question 1 réutilisé, alias de table. | Colonne manquante, tri absent, alias de colonne `nom` ambigu. |
+| **6** Programmation du samedi | Trois tables jointes, intervalle couvrant **toute** la journée. | Borne d'intervalle qui coupe des spectacles en soirée. |
+| **7** Scans refusés | Quatre tables jointes; le festivalier est celui **du billet**. | Colonne ou tri manquant. |
+| **8** Tous les artistes | `left join` sur `spectacle` **et** sur `scene` : les deux artistes sans spectacle apparaissent. | Le second `inner join` fait disparaître les artistes sans spectacle. |
 
-### Q3 — Extraction du nom d'utilisateur dans les logs critiques
+### C. Agrégations et groupements (25 points — 6,25 par question)
 
-| Niveau | Description | Note |
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Filtre sur niveau et mot-clé correct. Extraction juste. Tri et limite conformes. | 100 % |
-| **Suffisant** | Fonctionnelle mais extraction ou filtre partiellement imprécis. | 60 % |
-| **Invalide** | Non fonctionnelle ou extraction incorrecte. | 0 % |
+| **9** Ventes par revendeur | `left join`, `count(b.id)` (0 pour Lumen Billets), `sum`, `round(avg(…), 2)`, tri. | `count(*)` qui donne 1 au revendeur sans vente, ou revendeur absent. |
+| **10** Statistiques par catégorie | Quatre agrégats, arrondi, tri. | Arrondi ou alias manquant. |
+| **11** Scènes avec au moins 3 refus | `where` sur le résultat **avant** le regroupement, `having count(*) >= 3`. | Seuil `> 3`, ou `group by` incomplet. |
+| **12** Codes en double | `group by code` et `having count(*) > 1`. | Tri ou alias manquant. |
+
+### D. Sous-requêtes corrélées (25 points — 8,33 par question)
+
+| Question | Complet si… | Exemples de « Partiel » |
+|---|---|---|
+| **13** Prix sous 75 % de la moyenne | Sous-requête corrélée sur la **catégorie**. | Moyenne de tous les billets (non corrélée) : la logique est fausse → **Nul**. |
+| **14** Jamais acceptés | `exists` **et** `not exists`, corrélés sur le festivalier. | Seulement l'une des deux conditions (inclut les festivaliers jamais scannés). |
+| **15** Codes partagés | `exists` corrélé sur le code **avec un `id` différent**. | Condition sur l'`id` oubliée : tous les billets sortent → **Nul**. |
+
+### Conclusion de l'enquête
+
+Non notée, mais obligatoire : une conclusion absente entraîne une pénalité de 5 %.
 
 ---
 
-## Partie B — Jointures (20 %)
+## Partie 2 — en classe, supervisée (5 %)
 
-### Q4 — Équipements cafetière dans la salle identifiée
+Les instructions doivent s'exécuter **dans l'ordre**. Une instruction qui échoue à cause d'une
+question précédente ratée n'est pas pénalisée deux fois : on corrige la logique de chaque
+réponse.
 
-| Niveau | Description | Note |
+### A. Modifier la structure (20 points — 5 par question)
+
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Jointure correcte. Filtre sur type et salle juste. Colonnes et alias conformes. | 100 % |
-| **Suffisant** | Fonctionnelle mais filtre ou colonne légèrement imprécis. | 60 % |
-| **Invalide** | Non fonctionnelle ou jointure incorrecte. | 0 % |
+| **1** Colonne `actif` | `alter table … add column`, `not null`, `default true`. | `not null` ou `default` manquant. |
+| **2** Désactiver Billets Éclair | `update` filtré sur le nom, une seule ligne. | — |
+| **3** Agrandir le courriel | `modify column … varchar(150) not null`. | `not null` perdu (la colonne devient nullable). |
+| **4** Renommer `duree` | `rename column` ou `change column` avec le type complet. | `change column` sans `not null`. |
 
-### Q5 — Première décision IA dans la salle
+### B. Nettoyer et verrouiller les billets (35 points — 7 par question)
 
-| Niveau | Description | Note |
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Jointures correctes sur les trois tables. Filtre de date et tri conformes. Limite appliquée. | 100 % |
-| **Suffisant** | Fonctionnelle mais condition de jointure ou filtre légèrement imprécis. | 60 % |
-| **Invalide** | Non fonctionnelle ou jointures incorrectes. | 0 % |
+| **5** Cascade | `drop foreign key scan_billet_fk` puis `add constraint scan_billet_fk … on delete cascade`. | Nom différent, ou `on update cascade` au lieu de `on delete`. |
+| **6** Supprimer les billets d'Éclair | `delete` avec une sous-requête sur le nom du revendeur : 13 billets. | `id` codé en dur. |
+| **7** Unicité du code | `add constraint billet_code_uq unique (code)`. | Nom inexact. |
+| **8** Format du code | `check` avec `regexp`, motif ancré et `(?-i)`, nom exact. | Casse non exigée, motif non ancré, nom inexact. |
+| **9** Index | `create index scan_date_heure_idx on scan (date_heure)`. | Nom inexact. |
 
-### Q6 — Logs critiques avec équipement associé ou null
+### C. Mots de passe (20 points — 10 par question)
 
-| Niveau | Description | Note |
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Tous les logs critiques sont présents, avec ou sans équipement associé. Colonnes et tri conformes. | 100 % |
-| **Suffisant** | Fonctionnelle mais certains logs sans équipement ne sont pas conservés, ou tri incorrect. | 60 % |
-| **Invalide** | Non fonctionnelle ou jointure incorrecte. | 0 % |
+| **10** Hachage | Deux colonnes ajoutées, sel par revendeur, `sha2(concat(sel, mot_de_passe), 256)`, colonne en clair supprimée. | Hachage sans sel, ou colonne en clair conservée. |
+| **11** Vérification | Le hachage est recalculé **avec le sel de la ligne** et comparé : 1 ligne. | Mot de passe comparé en clair → **Nul**. |
 
----
+### D. Comptes et privilèges (25 points — 6,25 par question)
 
-## Partie C — Agrégations et groupements (15 %)
-
-### Q7 — Nombre de capteurs par type et valeur moyenne
-
-| Niveau | Description | Note |
+| Question | Complet si… | Exemples de « Partiel » |
 |---|---|---|
-| **Excellent** | Groupement correct par type de capteur et unité. Nombre de capteurs et moyenne calculés correctement. Tri conforme. | 100 % |
-| **Suffisant** | Fonctionnelle mais groupement, agrégation, tri ou alias légèrement imprécis. | 60 % |
-| **Invalide** | Non fonctionnelle ou regroupement/agrégation incorrect. | 0 % |
-
-### Q8 — Décisions par équipement avec plus d'une décision
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Groupement correct. Filtre appliqué correctement. Tri conforme. | 100 % |
-| **Suffisant** | Fonctionnelle mais filtre sur le groupement incorrect, ou tri/alias manquant. | 60 % |
-| **Invalide** | Non fonctionnelle ou logique de regroupement incorrecte. | 0 % |
-
----
-
-## Partie D — Sous-requêtes corrélées (15 %)
-
-### Q9 — Lectures consommation > moyenne du même type (sous-requête corrélée)
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Sous-requête corrélée explicite. Référence à la requête externe correcte. Tri conforme. | 100 % |
-| **Suffisant** | Logique correcte mais corrélation implicite ou absente (ex. : jointure à la place). | 60 % |
-| **Invalide** | Non fonctionnelle ou sous-requête non corrélée. | 0 % |
-
-### Q10 — Équipements sans décision IA (sous-requête corrélée)
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Sous-requête corrélée explicite. Résultats corrects. Tri conforme. | 100 % |
-| **Suffisant** | Logique correcte mais corrélation implicite ou absente. | 60 % |
-| **Invalide** | Non fonctionnelle ou résultats incorrects. | 0 % |
-
----
-
-## Partie E — DDL de maintenance (20 %)
-
-### Q11 — Contrainte unique sur salle.code
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Alter table fonctionnel. Nom de contrainte exactement `salle_code_uq`. | 100 % |
-| **Suffisant** | Contrainte ajoutée mais nom inexact ou syntaxe légèrement imprécise. | 60 % |
-| **Invalide** | Non fonctionnelle ou contrainte incorrecte. | 0 % |
-
-### Q12 — Contrainte check sur capteur.code (format CAP-XXX-000-00)
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Pattern regex exact. Nom de contrainte exactement `capteur_code_format_ck`. Fonctionnel. | 100 % |
-| **Suffisant** | Fonctionnelle mais pattern légèrement imprécis ou nom de contrainte inexact. | 60 % |
-| **Invalide** | Non fonctionnelle ou contrainte incorrecte. | 0 % |
-
-### Q13 — Suppression automatique de lecture_capteur
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | L'ancienne contrainte a bien été remplacée par une nouvelle contrainte avec les paramètres permettant de supprimer l'entité enfant. Nom exactement `lecture_capteur_capteur_fk`. | 100 % |
-| **Suffisant** | Paramètres corrects, mais nom de contrainte inexact ou étapes partiellement incorrectes. | 60 % |
-| **Invalide** | Non fonctionnelle ou contrainte incorrecte. | 0 % |
-
----
-
-## Partie F — Comptes, privilèges et mots de passe (15 %)
-
-### Q14 — Hachage des mots de passe (pgcrypto)
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Extension activée. Colonne hachée ajoutée. Update avec `crypt`/`gen_salt('bf')`. Colonne en clair supprimée. Aucun mot de passe lisible. | 100 % |
-| **Suffisant** | Fonctionnelle mais un élément manquant (ex. : colonne en clair non supprimée ou gen_salt incorrect). | 60 % |
-| **Invalide** | Hachage absent ou migration non fonctionnelle. | 0 % |
-
-### Q15 — Rôles, utilisateurs et privilèges
-
-| Niveau | Description | Note |
-|---|---|---|
-| **Excellent** | Rôles et utilisateurs créés. Associations correctes. Privilèges accordés conformément au moindre privilège. Retrait du `delete` appliqué sur `lecture_capteur` et `log_systeme`. All privileges sur tables et séquences pour `tp3_admin`. | 100 % |
-| **Suffisant** | Fonctionnel mais un élément manquant ou mal ciblé (revoke, séquences, association utilisateur/rôle). | 60 % |
-| **Invalide** | Non fonctionnel ou privilèges majoritairement incorrects. | 0 % |
+| **12** `analyste` | `create user 'analyste'@'localhost'`, `grant select on festival_boreal.*`. | Hôte manquant (`'analyste'@'%'`). |
+| **13** `agent_acces` | Privilèges **par table** : `select` sur `billet`, `select, insert` sur `scan`. | Droits accordés sur toute la base. |
+| **14** `admin_festival` | `grant all privileges on festival_boreal.*`. | `on *.*` (tout le serveur) → **Nul** : contraire au moindre privilège. |
+| **15** Retrait et vérification | `revoke insert on festival_boreal.scan`, puis `show grants for 'agent_acces'@'localhost'`. | `show grants` manquant. |
 
 ---
 
@@ -157,6 +108,7 @@ Les pondérations indiquent le poids de chaque critère dans la note finale.
 
 | Cas | Impact |
 |---|---|
-| Retard dans la remise | −10 % par jour (maximum −30 %) |
-| Notion non vue au cours utilisée | −5 % par occurrence (maximum −30 %) |
+| Retard dans la remise de la partie 1 | −10 % par jour (maximum −30 %) |
+| Fichier de réponses non utilisé, ou ordre des requêtes modifié | −5 % |
+| Notion non vue au cours, sans validation de l'enseignant | −5 % par occurrence (maximum −30 %) |
 | Utilisation non autorisée d'une source externe ou plagiat | 0 % au travail |

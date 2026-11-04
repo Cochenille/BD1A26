@@ -626,7 +626,7 @@ le texte du SVG) — à refaire selon le modèle utilisateur@hôte de MariaDB.
 | `docs/labs/lab09-securite.md` | 3 | Suit les changements du module 5 |
 | `docs/labs/lab03-ddl.md`, `lab06-jointures.md` | ✅ | Convertis (lab 03 en septembre, lab 06 avec le module 4) |
 | `docs/travaux/tp1-creation-bd.md` | — | ⏭️ **Ignoré** (décision du 2026-09-09) |
-| `docs/travaux/tp3-ddl-avance.md` | 3 | ⏭️ **Remplacé** : nouveau TP3 MariaDB rédigé le 2026-11-02 dans `examens/tp3/` (hors dépôt). L'ancien énoncé, ses images et `tp3_*.sql` seront supprimés à la publication |
+| `docs/travaux/tp3-festival.md` | 3 | ✅ **Nouveau TP3 MariaDB** (rédigé le 2026-11-02, partie 1 publiée le 2026-11-04) : énoncé, `grille-tp3.md`, `tp3_festival_boreal.sql`, `tp3_reponses_depart.sql`. L'ancien TP3 ARGUS (PostgreSQL), ses images et ses `.sql` sont supprimés. Partie 2 à publier le 3 décembre depuis `examens/tp3/` |
 | `docs/public/databases/*.sql` | — | Tous les jeux de données à reconvertir 🧑 |
 | `docs/public/plan-cours.pdf` | — | Le PDF mentionne probablement PostgreSQL 🧑 |
 | `docs/.vitepress/config.mts` | — | Le lien nav « Documentation MariaDB » redevient correct ✅ |

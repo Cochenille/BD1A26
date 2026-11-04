@@ -111,7 +111,7 @@ export default withMermaid(
             { text: "TP2 — Requêtes SQL", link: "/travaux/tp2-sql" },
             // À décommenter seulement au début de la période du 22 octobre :
             // { text: "TP2 — Partie B (en classe)", link: "/travaux/tp2-partie-b" },
-            // { text: "TP3 — DDL avancé", link: "/travaux/tp3-ddl-avance" },
+            { text: "TP3 — Billets fantômes", link: "/travaux/tp3-festival" },
           ],
         },
         {
@@ -120,7 +120,7 @@ export default withMermaid(
           items: [
             // { text: "Grille — Examen 1", link: "/grilles/grille-examen1" },
             { text: "Grille — TP2", link: "/grilles/grille-tp2" },
-            // { text: "Grille — TP3", link: "/grilles/grille-tp3" },
+            { text: "Grille — TP3", link: "/grilles/grille-tp3" },
             // { text: "Grille — Examen 2", link: "/grilles/grille-examen2" },
           ],
         },

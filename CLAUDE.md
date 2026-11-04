@@ -69,7 +69,8 @@ docs/
 Thèmes des TP (chacun a sa grille dans `docs/grilles/`) :
 - **TP1** — conception d'une BD à partir d'un modèle textuel (DDL uniquement, aucune donnée).
 - **TP2** — « Registre de la Guilde des Aventuriers » : insertions + requêtes de sélection.
-- **TP3** — « Enquête SQL : l'IA trop zélée » : DDL avancé sur une BD fournie.
+- **TP3** — « Les billets fantômes du Festival Boréal » : partie 1 (requêtes, maison, 10 %) +
+  partie 2 (DDL avancé, en classe, 5 %).
 
 Base de données d'exemple pour les démos de jointures/agrégations : **Chinook**
 (`docs/public/databases/chinook.sql`), dans une **traduction française** propre au cours
@@ -95,7 +96,7 @@ reste à faire à la main (captures, vidéos, vérifications DBeaver). Tenir les
 | Labs 08, 09 | ⏳ non revus — mentions explicites de PostgreSQL dans lab09 |
 | `module_03_evenement_*.sql`, `chinook.sql`, `tp2_guilde_structure.sql` | ✅ réécrits en MariaDB |
 | `tp2_bd1_depart.sql` | ⏳ à vérifier |
-| TP3 | ✅ refait en MariaDB (2026-11-02), non publié : tout est dans `examens/tp3/` (hors dépôt) — l'ancien TP3 PostgreSQL encore dans `docs/` sera supprimé à la publication |
+| TP3 | ✅ refait en MariaDB (2026-11-02), partie 1 publiée (2026-11-04, `tp3-festival.md`) — partie 2 et corrigés dans `examens/tp3/` (hors dépôt), partie 2 à publier le 3 décembre |
 | TP1 | mis de côté, non converti (décision du prof, 2026-09-09) |
 
 Différences à respecter en écrivant ou en convertissant du contenu :
