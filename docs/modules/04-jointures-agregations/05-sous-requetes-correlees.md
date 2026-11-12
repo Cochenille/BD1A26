@@ -222,32 +222,31 @@ Ici :
 
 Une sous-requête corrélée réévalue la sous-requête pour chaque ligne de la requête externe. Sur de grandes bases de données, cela peut avoir un impact sur les performances.
 
-À titre indicatif, voici la même requête réécrite avec une jointure et une agrégation :
+Dans l'exemple 1, la moyenne d'un genre est recalculée pour **chaque piste** de ce genre : si le genre Rock compte 1 000 pistes, sa moyenne est calculée 1 000 fois, alors qu'elle donne toujours le même résultat. C'est exactement ce que décrivait la boucle C# plus haut.
+
+Souvent, une jointure permet d'obtenir le même résultat. Par exemple, l'exemple 2 (clients ayant au moins une facture) peut s'écrire avec un simple `join` :
 
 ```sql
 -- Version avec sous-requête corrélée
-select p1.nom, p1.millisecondes, p1.genre_id
-from piste p1
-where p1.millisecondes > (
-	select avg(p2.millisecondes)
-	from piste p2
-	where p1.genre_id = p2.genre_id
+select c.client_id, c.prenom, c.nom_famille
+from client c
+where exists (
+	select 1
+	from facture f
+	where c.client_id = f.client_id
 )
-order by p1.genre_id, p1.millisecondes desc;
+order by c.client_id;
 
 -- Version équivalente avec jointure
-select p.nom, p.millisecondes, p.genre_id
-from piste p
-join (
-	select genre_id, avg(millisecondes) moyenne_genre
-	from piste
-	group by genre_id
-) stats on p.genre_id = stats.genre_id
-where p.millisecondes > stats.moyenne_genre
-order by p.genre_id, p.millisecondes desc;
+select distinct c.client_id, c.prenom, c.nom_famille
+from client c
+join facture f on c.client_id = f.client_id
+order by c.client_id;
 ```
 
-La version avec jointure calcule la moyenne une seule fois par groupe plutôt qu'une fois par ligne. Dans le contexte de ce cours, avec des bases de données de petite taille, la différence ne sera pas perceptible — c'est simplement bon à savoir si un jour vous êtes confrontés à des enjeux de performance.
+Le `distinct` est nécessaire : un client qui a 7 factures apparaîtrait sinon 7 fois.
+
+Dans le contexte de ce cours, avec des bases de données de petite taille, la différence de performance ne sera pas perceptible — c'est simplement bon à savoir si un jour vous êtes confrontés à des enjeux de performance.
 
 ## À retenir
 
