@@ -9,6 +9,51 @@ hero:
     alt: Logo du cours
 
 ---
+<section id="semaine-11">
+<div class="relative flex py-5 items-center mt-10">
+   <div class="grow border-t border-gray-400"></div>
+   <span class="shrink mx-4 text-gray-400">Semaine 11 — du 12 au 18 novembre</span>
+  <div class="grow border-t border-gray-400"></div>
+</div>
+<div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+  <WeeklyTodo
+    title="À faire cette semaine — En classe"
+    subtitle="Activités réalisées pendant la séance."
+    :steps="[
+      {
+        title: 'Module 4 — Sous-requêtes corrélées',
+        links: [
+          { text: 'Théorie — sous-requêtes corrélées', href: '/modules/04-jointures-agregations/05-sous-requetes-correlees', variant: 'primary' }
+        ]
+      },
+      {
+        title: 'Laboratoire 7 — Agrégations et sous-requêtes corrélées',
+        description: 'Terminer la partie 1 et faire la partie 2 (sous-requêtes corrélées et synthèse).',
+        links: [
+          { text: 'Laboratoire 7', href: '/labs/lab07-agregations', variant: 'primary' }
+        ]
+      }
+    ]"
+  />
+
+  <WeeklyTodo
+    title="À préparer / compléter"
+    subtitle="À compléter de votre côté."
+    :steps="[
+      {
+        title: 'Poursuivre la partie 1 du TP3',
+        description: 'Toute la matière nécessaire est maintenant vue. Fichier .sql à déposer sur LÉA, au plus tard en début de période le 26 novembre.',
+        badge: 'Remise — 10 %',
+        links: [
+          { text: 'Énoncé du TP3', href: '/travaux/tp3-festival', variant: 'primary' },
+          { text: 'Grille d’évaluation', href: '/grilles/grille-tp3', variant: 'secondary' }
+        ]
+      }
+    ]"
+  />
+</div>
+</section>
+
 <section id="semaine-10">
 <div class="relative flex py-5 items-center mt-10">
    <div class="grow border-t border-gray-400"></div>

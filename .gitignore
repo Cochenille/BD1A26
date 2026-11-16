@@ -88,3 +88,5 @@ typings/
 # Examens et corrigés (confidentiels, jamais publiés)
 /examens/
 /correction/
+# Package de passation (contient des corrigés)
+/passation/
