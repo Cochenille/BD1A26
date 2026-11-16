@@ -61,7 +61,7 @@ add column actif boolean not null default true;
 
 ```sql
 alter table album
-alter column titre type varchar(220);
+modify column titre varchar(220);
 ```
 
 Exemple typique :
@@ -118,17 +118,17 @@ Rendre une colonne obligatoire :
 
 ```sql
 alter table client
-alter column telephone set not null;
+modify column telephone varchar(50) not null;
 ```
 
 Retirer l'obligation :
 
 ```sql
 alter table client
-alter column fax drop not null;
+modify column fax varchar(50) null;
 ```
 
-Si des lignes contiennent déjà `null`, `set not null` échouera tant que ces données n'auront pas été corrigées.
+Si des lignes contiennent déjà null, la modification vers not null échouera tant que ces données n'auront pas été corrigées.
 
 ---
 
@@ -189,7 +189,7 @@ Avant de supprimer :
 ### Sources
 
 - [W3Schools — SQL ALTER TABLE Statement](https://www.w3schools.com/sql/sql_alter.asp)
-- [PostgreSQL Documentation — ALTER TABLE](https://www.postgresql.org/docs/current/sql-altertable.html)
+- [MariaDB Documentation — ALTER TABLE](https://mariadb.com/kb/en/alter-table/)
 
 ---
 
