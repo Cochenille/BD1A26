@@ -51,7 +51,7 @@ Vérifiez ensuite que :
 
 Ajoutez à la table `employe` :
 - `actif`
-- type `boolean`
+- type `boolean` (alias de `tinyint(1)` dans MariaDB)
 - `not null`
 - valeur par défaut `true`
 
@@ -104,6 +104,8 @@ Repérez d'abord la contrainte existante entre :
 - `facture(client_id)`
 - `client(client_id)`
 
+Utilisez les outils d'inspection de DBeaver ou les vues du dictionnaire de données de MariaDB pour identifier le nom réel de la contrainte.
+
 Ensuite, avec `alter table` :
 
 1. supprimez la contrainte actuelle
@@ -146,3 +148,5 @@ Question :
 ### 10. Supprimer un index
 
 Supprimez ensuite l'index sur `ville`.
+
+Note : en MariaDB, la suppression d'un index s'effectue avec `drop index ... on table`.
