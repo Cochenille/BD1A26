@@ -84,7 +84,7 @@ Il peut être peu utile si :
 
 Créer un index apporte aussi un coût :
 - l'index prend de l'espace disque
-- Surtout, PostgreSQL doit aussi le mettre à jour lors des `insert`, `update` et `delete`
+- Surtout, MariaDB doit aussi le mettre à jour lors des `insert`, `update` et `delete`
 
 Donc :
 - plus d'index peut améliorer certaines lectures
@@ -108,13 +108,13 @@ Dans Chinook, plusieurs index existent déjà sur des colonnes servant aux relat
 Syntaxe :
 
 ```sql
-drop index nom_index;
+drop index nom_index on nom_table;
 ```
 
 Exemple :
 
 ```sql
-drop index idx_client_courriel;
+drop index idx_client_courriel on client;
 ```
 
 Comme pour d'autres opérations de maintenance :
