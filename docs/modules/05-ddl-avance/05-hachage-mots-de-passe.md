@@ -6,7 +6,8 @@ aside: true
 # 05 — Hachage des mots de passe
 
 ## Objectif
-Comprendre pourquoi on ne doit pas stocker un mot de passe en clair, puis voir une manière simple de stocker et vérifier un **hachage** dans PostgreSQL.
+
+Comprendre pourquoi on ne doit pas stocker un mot de passe en clair, puis voir une manière simple de stocker et vérifier un **hachage** dans MariaDB.
 
 ## Démo rapide
 
@@ -82,36 +83,32 @@ Bob   -> autre sel     -> hachage B
 
 Même si le mot de passe de départ est identique, le résultat stocké change parce que le sel change.
 
-## Approche simple dans PostgreSQL
+## Approche simple
 
-### Activer l'extension `pgcrypto`
+### Fonctions de hachage intégrées
 
-```sql
-create extension if not exists pgcrypto;
-```
+MariaDB inclut déjà des fonctions permettant de produire des hachages.
 
 ### Exemple de table `utilisateur`
 
 ```sql
 create table utilisateur(
-    id serial primary key,
+    id int auto_increment primary key,
     courriel varchar(255) not null unique,
-    mot_de_passe_hache text not null,
+    mot_de_passe_hache varchar(255) not null,
     cree_le timestamp default current_timestamp
 );
 ```
 
 ### Exemple d'insertion
 
-Lors d'une nouvelle l'insertion, on doit utiliser la fonction `crypt` sur le mot de passe.
-- Rappel: la fonction `gen_salt()` ajoute une signature unique au mot de passe avant qu'il soit haché.
-- `bf` correspond à l'algorithme utilisé pour le hachage.
+Lors d'une nouvelle insertion, on peut utiliser la fonction SHA2 pour produire un hachage.
 
 ```sql
 insert into utilisateur (courriel, mot_de_passe_hache)
 values (
     'alice@exemple.com',
-    crypt('Bonjour123!', gen_salt('bf'))
+    sha2('Bonjour123!', 256)
 );
 ```
 
@@ -123,11 +120,13 @@ Si la requête retourne une ligne, cela signifie que la combinaison `courriel` +
 select id, courriel
 from utilisateur
 where courriel = 'alice@exemple.com'
-  and mot_de_passe_hache = crypt('Bonjour123!', mot_de_passe_hache);
+  and mot_de_passe_hache = sha2('Bonjour123!', 256);
 ```
+
 Lors d'une connexion, on ne compare pas avec le mot de passe en clair.
 
 On compare plutôt :
+
 - le mot de passe saisi
 - avec la valeur hachée déjà stockée
 
@@ -136,10 +135,14 @@ On compare plutôt :
 ### En pratique dans une vraie application
 
 Dans beaucoup de projets, le hachage est souvent fait :
+
 - dans l'application avant d'envoyer la requête vers la base de données
 - avec une bibliothèque spécialisée
 
+C'est une meilleure pratique.
+
 Exemples courants :
+
 - `bcrypt`
 - `scrypt`
 - `Argon2`
@@ -148,12 +151,12 @@ Exemples courants :
 
 - un mot de passe doit être stocké sous forme hachée, pas en clair
 - le sel améliore la sécurité du stockage
-- dans PostgreSQL, `pgcrypto` permet de faire une démonstration simple avec `crypt()` et `gen_salt()`
+- dans MariaDB, des fonctions comme SHA2() permettent de faire une démonstration simple du hachage
 - on peut simuler une connexion utilisateur en recalculant le mot de passe saisi et en le comparant à la valeur stockée dans la table
 
 ---
 
 ### Sources
 
-- [PostgreSQL Documentation — pgcrypto](https://www.postgresql.org/docs/current/pgcrypto.html)
+- [MariaDB Documentation — SHA2](https://mariadb.com/kb/en/sha2/)
 - [OWASP — Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
