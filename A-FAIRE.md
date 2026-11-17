@@ -4,7 +4,7 @@ Liste de travail pour la migration MariaDB. Ce fichier ne contient **que** ce qu
 intervention humaine (captures, vidéos, vérifications dans DBeaver). Le « pourquoi » de chaque
 point et l'historique complet sont dans [`MIGRATION-MARIADB.md`](MIGRATION-MARIADB.md).
 
-Dernière mise à jour : **2026-11-02**.
+Dernière mise à jour : **2026-11-17**. Ne semble pas à jour entièrement.
 
 ---
 
@@ -121,11 +121,6 @@ Les deux ont un bandeau rouge d'avertissement en place en attendant.
 - [x] **Publier la partie 1 du TP3** — publiée le 2026-11-04 (dates et interdiction de l'IA
       confirmées : remise 26 novembre, partie 2 le 3 décembre, 1 h 30). Ancien TP3 supprimé.
 - [ ] **Publier la partie 2 du TP3** le 3 décembre — voir `examens/tp3/README.md`.
-- [ ] **Module 5** — doit enseigner, en MariaDB, tout ce que la partie 2 du TP3 utilise :
-      `modify`/`rename column`, `drop foreign key`, comptes `'x'@'localhost'`, `grant`/`revoke`
-      par base et par table, `show grants`, hachage `sha2` + sel.
-- [ ] **Module 5** — le plus divergent : `04-gestion-de-comptes.md` (modèle utilisateur@hôte)
-      et `05-hachage-mots-de-passe.md` (pas de `pgcrypto`) sont à repenser.
 - [ ] **`docs/public/plan-cours.pdf`** — mentionne probablement PostgreSQL.
 - [ ] **Décision en suspens** : la base *empty* n'a pas `evenement.prix` ni `inscription.actif`,
       contrairement à la base *data*. C'était déjà le cas en PostgreSQL — à confirmer que c'est

@@ -90,10 +90,9 @@ reste à faire à la main (captures, vidéos, vérifications DBeaver). Tenir les
 
 | Partie | État |
 |---|---|
-| Modules 1, 2, 3 et labs 01, 03, 04, 05 | ✅ texte converti — captures d'écran encore à refaire (🧑 dans le journal) |
-| Module 4 et labs 06, 07 | ✅ convertis, activés et validés sur serveur (2026-10-12) |
-| Module 5 | ⏳ encore en PostgreSQL |
-| Labs 08, 09 | ⏳ non revus — mentions explicites de PostgreSQL dans lab09 |
+| Modules 1, 2, 3, 5 et labs 01, 03, 04, 05 | ✅ texte converti — captures d'écran encore à refaire (🧑 dans le journal) |
+| Module 4 et labs 06, 07, 08 | ✅ convertis, activés et validés sur serveur (2026-10-12) |
+| Labs 09 | ⏳ non revu — mentions explicites de PostgreSQL dans lab09 |
 | `module_03_evenement_*.sql`, `chinook.sql`, `tp2_guilde_structure.sql` | ✅ réécrits en MariaDB |
 | `tp2_bd1_depart.sql` | ⏳ à vérifier |
 | TP3 | ✅ refait en MariaDB (2026-11-02), partie 1 publiée (2026-11-04, `tp3-festival.md`) — partie 2 et corrigés dans `examens/tp3/` (hors dépôt), partie 2 à publier le 3 décembre |

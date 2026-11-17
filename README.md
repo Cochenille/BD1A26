@@ -1,3 +1,3 @@
-# cours
-Site du cours
-https://cochenille.github.io/BD1A26/
+# Cours
+
+Site du cours: <https://cochenille.github.io/BD1A26/>

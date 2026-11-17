@@ -595,26 +595,9 @@ aucune syntaxe propre à un SGBD. Rien à refaire.
 
 ---
 
-## Module 5 — DDL avancé ⏳ À FAIRE (le plus divergent)
+## Module 5 — DDL avancé ⏳ À FAIRE 
 
-- `01-alter-table.md` — `alter table ... alter column type` → `modify column` /
-  `change column` en MariaDB. Liens vers la doc PostgreSQL à remplacer.
-- `02-cascade-delete-update.md` — `on delete cascade` identique; mais `drop table ... cascade`
-  n'existe pas en MariaDB (il faut `set foreign_key_checks = 0` ou l'ordre de suppression).
-- `03-index-de-colonne.md` — `create index` compatible; seuls les liens vers la doc
-  PostgreSQL sont à remplacer. `drop index` demande `on ma_table` en MariaDB.
-- `04-gestion-de-comptes.md` — **réécriture majeure (428 lignes)**. Le modèle
-  *rôle unifié* de PostgreSQL n'existe pas en MariaDB : on a `create user 'x'@'localhost'`
-  (l'hôte fait partie de l'identité !), `grant ... on base.*`, `flush privileges`,
-  `show grants`. Les rôles existent (MariaDB 10.0.5+) mais fonctionnent autrement.
-  La notion de schéma `public` disparaît. Toute la page est à repenser.
-- `05-hachage-mots-de-passe.md` — `pgcrypto` / `crypt()` / `gen_salt()` **n'existent pas**
-  en MariaDB. Remplacer par `sha2()` + sel manuel, en expliquant clairement que le hachage
-  applicatif (bcrypt/argon2) reste la bonne pratique. Approche à décider ensemble.
 - `06-revision-examen-2.md` — à reprendre après les autres pages du module.
-
-🧑 **Image** : `hierarchie-utilisateur-role-privileges.svg` (35 mentions de PostgreSQL dans
-le texte du SVG) — à refaire selon le modèle utilisateur@hôte de MariaDB.
 
 ---
 
