@@ -12,7 +12,7 @@ Comprendre surtout l'effet de `on delete cascade` sur une clé étrangère, et c
 
 ## Pourquoi utilise Cascade
 
-Quand une table enfant référence une table parent avec une clé étrangère, PostgreSQL protège normalement l'intégrité référentielle.
+Quand une table enfant référence une table parent avec une clé étrangère, MariaDB protège normalement l'intégrité référentielle.
 
 Exemple :
 - un `client` peut être référencé par plusieurs `facture`
@@ -101,7 +101,7 @@ Retenez surtout ceci :
 
 ## Sans cascade
 
-Sans `cascade`, PostgreSQL bloque souvent l'opération.
+Sans `cascade`, MariaDB bloque souvent l'opération.
 
 Exemple :
 - on veut supprimer un client
@@ -145,7 +145,7 @@ Si une contrainte existe déjà, on ne peut généralement pas simplement "ajout
 
 En pratique, on doit souvent :
 
-1. la supprimer avec `drop constraint`
+1. la supprimer avec `drop foreign key`
 2. la recréer avec l'action souhaitée (cascade)
 
 ---
@@ -161,9 +161,9 @@ En pratique, on doit souvent :
 
 ### Sources
 
-- [PostgreSQL Documentation — Constraints](https://www.postgresql.org/docs/current/ddl-constraints.html)
-- [PostgreSQL Documentation — Alter table](https://www.postgresql.org/docs/current/sql-altertable.html)
-
+- [MariaDB Documentation — Constraints](https://mariadb.com/docs/server/reference/sql-statements/data-definition/constraint)
+- [MariaDB Documentation — Foreign Keys](https://mariadb.com/kb/en/foreign-keys/)
+- [MariaDB Documentation — Alter table](https://mariadb.com/kb/en/alter-table/)
 ---
 
 <div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
