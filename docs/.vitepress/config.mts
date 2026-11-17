@@ -24,6 +24,7 @@ export default withMermaid(
             { text: "Module 2 — DDL de base", link: "/modules/02-ddl-base/" },
             { text: "Module 3 — SQL", link: "/modules/03-sql-base/" },
             { text: "Module 4 — Jointures et agrégations", link: "/modules/04-jointures-agregations/" },
+            { text: "Module 5 — DDL avancé", link: "/modules/05-ddl-avance/" },
           ],
         },
         { text: "Documentation MariaDB", link: "https://mariadb.com/docs" },
@@ -89,6 +90,17 @@ export default withMermaid(
                 { text: "Sous-requêtes corrélées", link: "/modules/04-jointures-agregations/05-sous-requetes-correlees" },
               ],
             },
+            {
+              text: "Module 5 — DDL avancé",
+              collapsed: true,
+              items: [
+                { text: "Alter table", link: "/modules/05-ddl-avance/01-alter-table" },
+                { text: "Cascade Delete/Update", link: "/modules/05-ddl-avance/02-cascade-delete-update" },
+                { text: "Index de colonne", link: "/modules/05-ddl-avance/03-index-de-colonne" },
+                { text: "Gestion de comptes et privilèges", link: "/modules/05-ddl-avance/04-gestion-de-comptes.md" },
+                { text: "Hachage des mots de passe", link: "/modules/05-ddl-avance/05-hachage-mots-de-passe.md" },
+              ],
+            },
           ],
         },
         {
@@ -102,6 +114,7 @@ export default withMermaid(
             { text: "Lab 05 — Modification, opérateurs et sous-requêtes", link: "/labs/lab05-avance" },
             { text: "Lab 06 — Jointures", link: "/labs/lab06-jointures" },
             { text: "Lab 07 — Agrégations", link: "/labs/lab07-agregations" },
+            { text: "Lab 08 — DDL maintenance", link: "/labs/lab08-ddl-maintenance" },
           ],
         },
         {
