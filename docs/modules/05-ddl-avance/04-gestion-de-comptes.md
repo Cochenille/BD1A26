@@ -6,13 +6,15 @@ aside: true
 # 04 — Gestion de comptes et privilèges
 
 ## Objectif
-Comprendre la différence entre **utilisateur**, **rôle** et **privilège** dans PostgreSQL, savoir attribuer des droits adaptés au contexte, puis vérifier que ces droits sont bien en place.
+
+Comprendre la différence entre **utilisateur**, **rôle** et **privilège** dans MariaDB, savoir attribuer des droits adaptés au contexte, puis vérifier que ces droits sont bien en place.
 
 ## L'essentiel à connaître
 
-Dans PostgreSQL, on ne donne pas tous les droits à tout le monde.
+Dans MariaDB, on ne donne pas tous les droits à tout le monde.
 
 Le bon réflexe est :
+
 - donner seulement les droits nécessaires
 - séparer les responsabilités
 - éviter d'utiliser un compte trop puissant pour une application
@@ -27,10 +29,7 @@ Pour ne pas mêler les concepts, retenez ce modèle simple :
 2. un **rôle** sert souvent à regrouper des permissions
 3. un **privilège** est un droit précis sur un objet précis
 
-En pratique PostgreSQL unifie tout cela sous le mot **rôle**.
-Donc :
-- un utilisateur = un rôle qui peut se connecter
-- un rôle de groupe = un rôle sans connexion, utilisé pour porter des droits
+Dans MariaDB, les utilisateurs, les rôles et les privilèges sont des concepts distincts.
 
 Le bon réflexe est donc :
 - créer des utilisateurs pour les personnes et les applications
@@ -101,40 +100,38 @@ flowchart LR
 
 ### Utilisateur
 
-Un utilisateur est un compte qui peut se connecter à PostgreSQL.
-
-En pratique, dans PostgreSQL :
-- un utilisateur est un **rôle avec l'attribut `login`**
-- `create user` est essentiellement une forme pratique de `create role ... login`
+Un utilisateur est un compte qui peut se connecter à MariaDB.
 
 ```sql
-create user bob with password 'mot_de_passe_dev';
+create user 'bob'@'localhost'
+identified by 'mot_de_passe_dev';
 ```
 
 ### Rôle
 
-- Un rôle va normalement servir à porter des privilèges (lecture, écriture, etc.).
-- On va ensuite attribuer un à plusieurs rôles à un utilisateur
+Un rôle sert à regrouper des privilèges.
+
+On peut ensuite attribuer un ou plusieurs rôles à un utilisateur.
 
 ```sql
 create role admin;
 create role developpeur;
 create role lecture_seule;
 
-grant admin to alice;
-grant developpeur to bob;
-grant lecture_seule to joe_analyste;
+grant admin to 'alice'@'localhost';
+grant developpeur to 'bob'@'localhost';
+grant lecture_seule to 'joe_analyste'@'localhost';
 ```
 
 ### Privilège
 
-Un privilège est un droit d'effectuer une action sur un objet PostgreSQL.
+Un privilège est un droit d'effectuer une action sur un objet MariaDB.
 
 Exemples :
-- `connect` sur une base de données
-- `usage` sur un schéma
+
 - `select`, `insert`, `update`, `delete` sur une table
-- `execute` sur une fonction
+- `create`, `alter`, `drop` sur des objets
+- `execute` sur une procédure ou une fonction
 
 ---
 
@@ -204,82 +201,61 @@ Une structure simple et claire ressemble souvent à ceci :
 - `lecture_seule` : rôle de consultation
 
 Puis :
+
 - on donne les privilèges aux rôles
 - on rattache les utilisateurs aux rôles
 
 Exemple :
 
 ```sql
-create user alice_admin with password 'mot_de_passe_admin';
-create user bob_dev with password 'mot_de_passe_dev';
-create user joe_analyste with password 'mot_de_passe_lecture';
-create user app_web with password 'mot_de_passe_app';
+create user 'alice_admin'@'localhost'
+identified by 'mot_de_passe_admin';
+
+create user 'bob_dev'@'localhost'
+identified by 'mot_de_passe_dev';
+
+create user 'joe_analyste'@'localhost'
+identified by 'mot_de_passe_lecture';
+
+create user 'app_web'@'localhost'
+identified by 'mot_de_passe_app';
 
 create role admin;
 create role developpeur;
 create role lecture_seule;
 
-grant admin to alice_admin;
-grant developpeur to bob_dev;
-grant lecture_seule to joe_analyste;
-grant developpeur to app_web; -- Tâches semblables au développeur
+grant admin to 'alice_admin'@'localhost';
+grant developpeur to 'bob_dev'@'localhost';
+grant lecture_seule to 'joe_analyste'@'localhost';
+grant developpeur to 'app_web'@'localhost';
 ```
 
 Cette approche est plus facile à maintenir que de gérer chaque utilisateur séparément.
 
 ## Gérer les privilèges avec `grant`
 
-### Donner l'accès à la base de données
-
-```sql
-grant connect on database nom_de_la_bd to developpeur;
-grant connect on database nom_de_la_bd to lecture_seule;
-```
-
-### Donner l'accès au schéma
-
-Dans PostgreSQL, beaucoup d'exemples utilisent le schéma `public`.
-
-```sql
-grant usage on schema public to developpeur;
-grant usage on schema public to lecture_seule;
-```
-
 ### Donner des droits sur les tables
 
 ```sql
 grant select, insert, update, delete
-on all tables in schema public
+on nom_de_la_bd.*
 to developpeur;
 
 grant select
-on all tables in schema public
+on nom_de_la_bd.*
 to lecture_seule;
-```
-
-### Donner des droits sur les séquences (`serial`)
-
-Quand des colonnes auto-générées (clés primaires) utilisent des séquences (pensez au type `serial`), il faut aussi donner des droits sur ces séquences.
-
-```sql
-grant usage, select
-on all sequences in schema public
-to developpeur;
 ```
 
 ### Donner des droits à un administrateur
 
-Le rôle `admin` peut recevoir des droits plus larges sur la base de données.
-
 ```sql
-grant connect, create on database nom_de_la_bd to admin;
-grant usage, create on schema public to admin;
-grant all privileges on all tables in schema public to admin;
-grant all privileges on all sequences in schema public to admin;
+grant all privileges
+on nom_de_la_bd.*
+to admin;
 ```
 
-- `admin` n'est pas automatiquement un superutilisateur PostgreSQL
-- ces `grant` donnent beaucoup de pouvoir sur les objets visés
+- `admin` n'est pas automatiquement un superutilisateur
+- ces privilèges donnent un contrôle important sur les objets de la base
 
 ---
 
@@ -288,11 +264,16 @@ grant all privileges on all sequences in schema public to admin;
 `revoke` sert à retirer un privilège ou un rôle.
 
 ```sql
-revoke update on table employe from developpeur;
+revoke update
+on nom_de_la_bd.employe
+from developpeur;
 
-revoke developpeur from bob;
+revoke developpeur
+from 'bob'@'localhost';
 
-revoke all on table employe from lecture_seule;
+revoke all privileges
+on nom_de_la_bd.employe
+from lecture_seule;
 ```
 
 Le principe reste le même :
@@ -307,101 +288,98 @@ Le tableau suivant résume les privilèges les plus utiles à retenir dans ce co
 L'idée n'est pas de tout mémoriser, mais de reconnaître les plus fréquents.
 
 | Privilège | S'applique surtout à | Permet essentiellement de |
-|---|---|---|
-| `CONNECT` | base de données | se connecter à une base de données |
-| `USAGE` | schéma, séquence, type | accéder à un schéma ou utiliser certains objets |
-| `CREATE` | base de données, schéma, tablespace | créer de nouveaux objets |
-| `SELECT` | table, vue, séquence | lire des données |
+| - | - | - |
+| `SELECT` | table, vue | lire des données |
 | `INSERT` | table | ajouter des lignes |
 | `UPDATE` | table | modifier des lignes |
 | `DELETE` | table | supprimer des lignes |
-| `REFERENCES` | table, colonne | créer une clé étrangère qui référence la table |
+| `CREATE` | base de données, table | créer de nouveaux objets |
+| `ALTER` | table | modifier la structure |
+| `DROP` | table, base de données | supprimer un objet |
+| `EXECUTE` | procédure, fonction | exécuter une routine |
+| `ALL PRIVILEGES` | base ou objet | accorder tous les privilèges disponibles |
 
-Source :
-- [PostgreSQL Documentation — Privileges](https://www.postgresql.org/docs/current/ddl-priv.html)
+Source : [PostgreSQL Documentation — Privileges](https://www.postgresql.org/docs/current/ddl-priv.html)
 
-## Valider les droits dans PostgreSQL
+## Valider les droits dans MariaDB
 
 Voici quelques requêtes SQL simples que vous pouvez exécuter directement dans DBeaver.
 
 ### Voir les rôles
 
-Les rôles commençant par pg on été intentionnellement retirés.
-
 ```sql
-select rolname, rolcanlogin, rolsuper, rolcreatedb, rolcreaterole
-from pg_roles
-where rolname not like 'pg%'
-order by rolname;
+select host, user
+from mysql.user
+order by user;
 ```
 
 ### Voir quel utilisateur est actif
 
 ```sql
-select current_user, session_user;
+select current_user();
 ```
-
-Repère :
-- `session_user` correspond au compte de départ
-- `current_user` correspond au rôle actif au moment présent
-
-Si vous utilisez `set role`, `current_user` peut changer alors que `session_user` reste identique.
 
 ### Voir les bases de données
 
 ```sql
-select datname
-from pg_database
-order by datname;
+show databases;
 ```
 
 ### Voir les privilèges sur les tables
 
 ```sql
-select grantee, table_schema, table_name, privilege_type
-from information_schema.role_table_grants
-where table_schema = 'public'
+select grantee,
+       table_schema,
+       table_name,
+       privilege_type
+from information_schema.table_privileges
+where table_schema = 'nom_de_la_bd'
 order by grantee, table_name, privilege_type;
 ```
 
 ### Voir les privilèges sur une table précise
 
 ```sql
-select grantee, table_schema, table_name, privilege_type
-from information_schema.role_table_grants
-where table_schema = 'public'
+select grantee,
+       table_schema,
+       table_name,
+       privilege_type
+from information_schema.table_privileges
+where table_schema = 'nom_de_la_bd'
   and table_name = 'client'
 order by grantee, privilege_type;
 ```
 
-### Voir les privilèges sur les séquences
-
-```sql
-select grantee, object_schema, object_name, privilege_type
-from information_schema.usage_privileges
-where object_schema = 'public'
-order by grantee, object_name, privilege_type;
-```
-
 ### Tester avec un rôle précis
 
-On peut aussi valider le comportement en se connectant avec un autre utilisateur, ou en testant avec :
+On peut vérifier quel rôle est actif dans la session courante.
 
 ```sql
-select current_user, session_user;
-
-set role developpeur;
-select current_user, session_user;
-select * from employe;
-reset role;
+select current_role();
 ```
 
-Cette approche permet de vérifier concrètement ce qu'un rôle peut ou ne peut pas faire.
+Pour activer un rôle :
+
+```sql
+set role developpeur;
+```
+
+Puis vérifier le rôle actif :
+
+```sql
+select current_role();
+```
+
+On peut ensuite tester les opérations autorisées :
+
+```sql
+select * from employe;
+```
 
 ## À retenir
 
-- dans PostgreSQL, tout tourne autour de la notion de rôle
-- un utilisateur est essentiellement un rôle avec droit de connexion
+- dans MariaDB, utilisateurs, rôles et privilèges sont des concepts distincts
+- les rôles permettent de regrouper des privilèges et de simplifier l'administration
 - le plus simple est de donner les privilèges à des rôles de groupe, puis d'y rattacher les utilisateurs
 - il faut attribuer les droits selon le principe du moindre privilège
 - les comptes applicatifs ne devraient pas avoir plus de droits que nécessaire
@@ -411,9 +389,10 @@ Cette approche permet de vérifier concrètement ce qu'un rôle peut ou ne peut 
 
 ### Sources
 
-- [PostgreSQL Documentation — Privileges](https://www.postgresql.org/docs/current/ddl-priv.html)
-- [PostgreSQL Documentation — GRANT](https://www.postgresql.org/docs/current/sql-grant.html)
-- [PostgreSQL Documentation — REVOKE](https://www.postgresql.org/docs/current/sql-revoke.html)
+- [MariaDB Documentation — GRANT](https://mariadb.com/kb/en/grant/)
+- [MariaDB Documentation — REVOKE](https://mariadb.com/kb/en/revoke/)
+- [MariaDB Documentation — Roles Overview](https://mariadb.com/kb/en/roles_overview/)
+
 ---
 
 <div class="my-6 rounded-lg border border-blue-300 bg-blue-50 p-4 text-blue-900">
