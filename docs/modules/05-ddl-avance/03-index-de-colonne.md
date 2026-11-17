@@ -134,8 +134,8 @@ Comme pour d'autres opérations de maintenance :
 
 ### Sources
 
-- [PostgreSQL Documentation — Indexes](https://www.postgresql.org/docs/current/indexes.html)
-- [PostgreSQL Documentation — CREATE INDEX](https://www.postgresql.org/docs/current/sql-createindex.html)
+- [MariaDB Documentation — Indexes](https://mariadb.com/kb/en/optimization-and-indexes/)
+- [MariaDB Documentation — CREATE INDEX](https://mariadb.com/kb/en/create-index/)
 
 ---
 
