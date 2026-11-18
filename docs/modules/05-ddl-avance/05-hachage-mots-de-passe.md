@@ -11,7 +11,7 @@ Comprendre pourquoi on ne doit pas stocker un mot de passe en clair, puis voir u
 
 ## Démo rapide
 
-Avant de passer à PostgreSQL, vous pouvez visualiser le principe avec l'outil [bcrypt-generator.com](https://bcrypt-generator.com/).
+Avant de passer à MariaDB, vous pouvez visualiser le principe avec l'outil [bcrypt-generator.com](https://bcrypt-generator.com/).
 
 Ce site permet :
 - de générer un hachage `bcrypt` (bibliothèque populaire)
